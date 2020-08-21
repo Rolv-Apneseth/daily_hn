@@ -1,7 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import pprint
-from hyperlink import URL
 
 #page 1 of news
 res = requests.get("https://news.ycombinator.com/news")
@@ -23,6 +21,11 @@ subtext += soup.select(".subtext")
 
 
 def clean(links, subtext):
+    """
+    Organises the links and subtext lists given from the soup into a list of dictionaries which display title,
+    link and votes to each article, then returns this list.
+    """
+
     hn = []
     for inx, item in enumerate(links):
         vote = subtext[inx].select(".score")
@@ -39,15 +42,16 @@ def clean(links, subtext):
 
 
 def sort_by_points(hn_list):
-    return sorted(hn_list, key=lambda k: k["score"], reverse=True)
+    """Sorts the given list of dictionaries by the votes category."""
+
+    return sorted(hn_list, key=lambda x: x["score"], reverse=True)
 
 
 def format_list(sorted_list):
     for idx, dictionary in enumerate(sorted_list):
         score, title, link = dictionary["score"], dictionary["title"], dictionary["link"]
-        url = URL.from_text(link)
-        print(f'\n\nTitle: {title}\nScore: {score}\nLink: ', end="")
-        print(url)
+
+        print(f'\n\nTitle: {title}\nScore: {score}\nLink: {link}')
 
 
 
