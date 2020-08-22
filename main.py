@@ -5,6 +5,8 @@ from tkinter import ttk
 import webbrowser
 import textwrap
 
+import parse_script
+
 
 #Variable to keep track of the index of the article in display, for displaying different articles as only 10 fit on the gui at one time
 headline_tally = 0
@@ -13,49 +15,56 @@ headline_tally = 0
 title_font = ("Helvetica", 12, "underline", "bold")
 title_cursor = "hand2"
 
-#takes links and subtext from soup and makes a list of dictionaries for each news article with a score of over 150 points
-#to change from 150 to a lower or higher number you can just change the 150 value directly as it appears no where else
 def alternative_hacker_news(links, subtext):
+    """
+    Organises the links and subtext lists given from the soup into a list of dictionaries which display title,
+    link and votes to each article, if the article has more than 150 votes, then returns this list.
+    """
+
     hn = []
     for inx, item in enumerate(links):
         vote = subtext[inx].select(".score")
-
-
         title = links[inx].getText()
         href = links[inx].get("href", None)
+        #If statement in case article has not yet received any votes so does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
+            #Change 150 to a lower number if you want to see more articles
             if points > 150:
                 hn.append({"title": title, "link": href, "score": points})
 
     return hn
 
 
-#Sorts the list of dictionaries from alternative_hacker_news to be ordered by score (highest first)
 def sort_by_points(hn_list):
+    """Sorts the list of dictionaries from alternative_hacker_news to be ordered by score (highest first)"""
+
     sorted_list = sorted(hn_list, key=lambda k: k["score"], reverse=True)
 
     return sorted_list
 
 
-#Formats the titles within the dictionaries in the sorted list so that they fit in the labels for titles on the gui
 def format_titles(sorted_list):
+    """Formats the titles within the dictionaries in the sorted list so that they fit in the labels for titles on the gui"""
+
     wrap_size = 30
+    formatted_list = sorted_list
     for dictionary in sorted_list:
         if len(dictionary["title"]) > wrap_size:
             dictionary["title"] = textwrap.fill(dictionary["title"], wrap_size)
-    formatted_list = sorted_list
 
     return formatted_list
 
 
-#Opens the links with the browser, activated when a title is clicked
 def open_url(url):
+    """Opens the links with the browser, to be activated when a title is clicked"""
+
     webbrowser.open_new(url)
 
 
-#Binds the previous function onto each title so that they can simply be clicked to open the respective link
 def bind_links(count, formatted_list):
+    """Binds the open_url function onto each title so that they can simply be clicked to open the respective link"""
+
     title_label1.bind("<Button-1>", lambda e: open_url(formatted_list[count]["link"]))
     title_label2.bind("<Button-1>", lambda e: open_url(formatted_list[count+1]["link"]))
     title_label3.bind("<Button-1>", lambda e: open_url(formatted_list[count+2]["link"]))
@@ -68,9 +77,12 @@ def bind_links(count, formatted_list):
     title_label10.bind("<Button-1>", lambda e: open_url(formatted_list[count+9]["link"]))
 
 
-#Sets the title for each of the 10 labels on the gui
-#Titles set according to variable headline_tally, so they may be given in order
 def set_titles(count, formatted_list):
+    """
+    Sets the title for each of the 10 labels on the gui.
+    Titles set according to variable headline_tally, so they may be given in order.
+    """
+
     title_label1["text"] = f'{str(count+1)}.{formatted_list[count]["title"]}\nScore: {str(formatted_list[count]["score"])}'
     title_label2["text"] = f'{str(count+2)}.{formatted_list[count+1]["title"]}\nScore: {str(formatted_list[count+1]["score"])}'
     title_label3["text"] = f'{str(count+3)}.{formatted_list[count+2]["title"]}\nScore: {str(formatted_list[count+2]["score"])}'
@@ -83,50 +95,59 @@ def set_titles(count, formatted_list):
     title_label10["text"] = f'{str(count+10)}.{formatted_list[count+9]["title"]}\nScore: {str(formatted_list[count+9]["score"])}'
 
 
-#shows previous 10 articles (if possible)
-def previous_button_function(formatted_list):
-    global headline_tally
+def previous_button_function(formatted_list, headline_tally):
+    """Shows previous 10 articles (if possible)"""
+
     if headline_tally >= 10:
         headline_tally -= 10
         set_titles(headline_tally, formatted_list)
         bind_links(headline_tally, formatted_list)
 
 
-#shows next 10 articles (if possible)
-def next_button_function(formatted_list):
-    global headline_tally
+def next_button_function(formatted_list, headline_tally):
+    """Shows next 10 articles (if possible)"""
+
     if len(formatted_list) >= (headline_tally + 20):
         print(headline_tally)
         headline_tally += 10
         set_titles(headline_tally, formatted_list)
         bind_links(headline_tally, formatted_list)
 
+def links_and_subtext():
+    """
+    Returns a tuple containing a list of links to articles and a list of titles and votes,
+    to be sent to alternative_hacker_news
+    """
 
-#Getting the News, core of the program
-#page 1 of news, requests articles from first page
-res = requests.get("https://news.ycombinator.com/news")
-soup = BeautifulSoup(res.text, "html.parser")
-links = soup.select(".storylink")
-subtext = soup.select(".subtext")
+    #Get links and subtext from page 1 of hacker news
+    soup = parse_script.get_soup("https://news.ycombinator.com/news")
+    links = parse_script.get_links(soup)
+    subtext = parse_script.get_subtext(soup)
+    #Add links and subtext from pages 2 and 3 of hacker news
+    for link in ["https://news.ycombinator.com/news?p=2", "https://news.ycombinator.com/news?p=3"]:
+        soup = parse_script.get_soup(link)
+        parse_script.add_links(links, soup)
+        parse_script.add_subtext(subtext, soup)
 
-#page 2 of news
-res = requests.get("https://news.ycombinator.com/news?p=2")
-soup = BeautifulSoup(res.text, "html.parser")
-links += soup.select(".storylink")
-subtext += soup.select(".subtext")
+    return (links, subtext)
 
-#page 3 of news
-res = requests.get("https://news.ycombinator.com/news?p=3")
-soup = BeautifulSoup(res.text, "html.parser")
-links += soup.select(".storylink")
-subtext += soup.select(".subtext")
+
+def get_formatted_list(links_and_subtext):
+    """Gets a formatted list of all the articles with over 150 points"""
+
+    formatted_list = format_titles(sort_by_points(alternative_hacker_news(links_and_subtext[0], links_and_subtext[1])))
+
+    return formatted_list
+
+def startup():
+    """Run so that first 10 titles are shown straight away on the gui."""
+
+    bind_links(headline_tally, formatted_list)
+    set_titles(headline_tally, formatted_list)
 
 #Formatted list of articles and links
-#Saves formatted list into a variable for ease of access
-formatted_list = format_titles(sort_by_points(alternative_hacker_news(links, subtext)))
-print(len(formatted_list))
-
-#BEGIN TKINTER MAINLOOP
+formatted_list = get_formatted_list(links_and_subtext())
+#UI
 root = tk.Tk()
 
 #default window size
@@ -202,8 +223,6 @@ bg10.place(relwidth=1, relheight=1)
 
 #LABELS
 #make title labels
-
-
 title_label1 = tk.Label(frame1, bg="gray", font=title_font, cursor=title_cursor)
 title_label1.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label2 = tk.Label(frame2, bg="gray", font=title_font, cursor=title_cursor)
@@ -227,16 +246,13 @@ title_label10.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
 #BUTTONS
 #make next and previous buttons
-next_button = ttk.Button(root, text="Next", command=lambda: next_button_function(formatted_list), cursor=title_cursor)
+next_button = ttk.Button(root, text="Next", command=lambda: next_button_function(formatted_list, headline_tally), cursor=title_cursor)
 next_button.place(relx=0.875, rely=0.06, relwidth=0.1, relheight=0.05)
 
-previous_button = ttk.Button(root, text="Previous", command=lambda: previous_button_function(formatted_list), cursor=title_cursor)
+previous_button = ttk.Button(root, text="Previous", command=lambda: previous_button_function(formatted_list, headline_tally), cursor=title_cursor)
 previous_button.place(relx=0.025, rely=0.06, relwidth=0.1, relheight=0.05)
 
-
-#Startup, so first 10 titles are shown straight away
-bind_links(headline_tally, formatted_list)
-set_titles(headline_tally, formatted_list)
-
+#Displays first 10 articles straight away
+startup()
 
 root.mainloop()
