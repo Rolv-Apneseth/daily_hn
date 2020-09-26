@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
+
 def get_soup(link):
     """Gets soup from a given website."""
 
@@ -48,10 +49,10 @@ def clean(links, subtext):
         vote = subtext[inx].select(".score")
         title = links[inx].getText()
         href = links[inx].get("href", None)
-        #If statement in case article has not yet received any votes so does not have a vote category
+        # If statement in case article has not yet received any votes so does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
-            #Change 150 to a lower number if you want to see more articles
+            # Change 150 to a lower number if you want to see more articles
             if points > 150:
                 hn.append({"title": title, "link": href, "score": points})
 
@@ -61,7 +62,7 @@ def clean(links, subtext):
 def sort_by_points(hn_list):
     """Sorts the given list of dictionaries by the score category."""
 
-    #reversed so that the list is in descending order
+    # reversed so that the list is in descending order
     return sorted(hn_list, key=lambda x: x["score"], reverse=True)
 
 
@@ -75,11 +76,11 @@ def format_list(sorted_list):
 
 
 def main():
-    #Get links and subtext from page 1 of hacker news
+    # Get links and subtext from page 1 of hacker news
     soup = get_soup("https://news.ycombinator.com/news")
     links = get_links(soup)
     subtext = get_subtext(soup)
-    #Add links and subtext from pages 2 and 3 of hacker news
+    # Add links and subtext from pages 2 and 3 of hacker news
     for link in ["https://news.ycombinator.com/news?p=2", "https://news.ycombinator.com/news?p=3"]:
         soup = get_soup(link)
         add_links(links, soup)
