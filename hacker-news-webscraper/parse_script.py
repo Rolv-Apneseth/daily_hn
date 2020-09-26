@@ -52,8 +52,8 @@ def clean(links, subtext):
         # If statement in case article has not yet received any votes so does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
-            # Change 150 to a lower number if you want to see more articles
-            if points > 150:
+            # Change 100 to a lower number if you want to see more articles
+            if points > 100:
                 hn.append({"title": title, "link": href, "score": points})
 
     return hn

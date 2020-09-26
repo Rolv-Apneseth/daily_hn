@@ -1,5 +1,3 @@
-from bs4 import BeautifulSoup
-import requests
 import tkinter as tk
 from tkinter import ttk
 import webbrowser
