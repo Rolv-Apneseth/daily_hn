@@ -7,22 +7,22 @@ import os
 import parse_script
 
 
+# Font and cursor for gui
+TITLE_FONT = ("Helvetica", 12, "underline", "bold")
+TITLE_CURSOR = "hand2"
+
 # Variable to keep track of the index of the article in display, for displaying different articles as only 10 fit on the gui at one time
-headline_tally = 0
-
-# Fonts and cursors for gui
-title_font = ("Helvetica", 12, "underline", "bold")
-title_cursor = "hand2"
-
+# A list so that variable changes from within the scope of functions are changed
+headline_tally = [0]
 
 def alternative_hacker_news(links, subtext):
     """
-    Organises the links and subtext lists given from the soup into a list of dictionaries which display title,
-    link and votes to each article, if the article has more than 150 votes, then returns this list.
+    Returns an organised list of dictionaries which display title,
+    link and votes to each article, if the article has more than 150 votes.
     """
 
     hn = []
-    for inx, item in enumerate(links):
+    for inx, _ in enumerate(links):
         vote = subtext[inx].select(".score")
         title = links[inx].getText()
         href = links[inx].get("href", None)
@@ -37,7 +37,7 @@ def alternative_hacker_news(links, subtext):
 
 
 def sort_by_points(hn_list):
-    """Sorts the list of dictionaries from alternative_hacker_news to be ordered by score (highest first)"""
+    """Returns a sorted list of dictionaries from alternative_hacker_news to be ordered by score (highest first)"""
 
     sorted_list = sorted(hn_list, key=lambda k: k["score"], reverse=True)
 
@@ -45,7 +45,7 @@ def sort_by_points(hn_list):
 
 
 def format_titles(sorted_list):
-    """Formats the titles within the dictionaries in the sorted list so that they fit in the labels for titles on the gui"""
+    """Returns a list of dictionaries where the titles within the dictionaries are formatted so that they have wrapped text (to fit inside their given labels)"""
 
     wrap_size = 30
     formatted_list = sorted_list
@@ -57,7 +57,7 @@ def format_titles(sorted_list):
 
 
 def open_url(url):
-    """Opens the links with the browser, to be activated when a title is clicked"""
+    """Opens the given url with the default browser, to be activated when a title is clicked"""
 
     webbrowser.open_new(url)
 
@@ -89,8 +89,8 @@ def bind_links(count, formatted_list):
 
 def set_titles(count, formatted_list):
     """
-    Sets the title for each of the 10 labels on the gui.
-    Titles set according to variable headline_tally, so they may be given in order.
+    Sets the title for each of the 10 labels on the gui
+    Titles are set according to variable headline_tally, so they may be given in order
     """
 
     title_label1["text"] = f'{str(count+1)}.{formatted_list[count]["title"]}\nScore: {str(formatted_list[count]["score"])}'
@@ -105,29 +105,32 @@ def set_titles(count, formatted_list):
     title_label10["text"] = f'{str(count+10)}.{formatted_list[count+9]["title"]}\nScore: {str(formatted_list[count+9]["score"])}'
 
 
+def titles_and_links(formatted_list, headline_tally):
+    """Helper function to run bind_links and set_titles functions"""
+
+    bind_links(headline_tally[0], formatted_list)
+    set_titles(headline_tally[0], formatted_list)
+
+
 def previous_button_function(formatted_list, headline_tally):
     """Shows previous 10 articles (if possible)"""
-
-    if headline_tally >= 10:
-        headline_tally -= 10
-        set_titles(headline_tally, formatted_list)
-        bind_links(headline_tally, formatted_list)
+    if headline_tally[0] >= 10:
+        headline_tally[0] -= 10
+        titles_and_links(formatted_list, headline_tally)
 
 
 def next_button_function(formatted_list, headline_tally):
     """Shows next 10 articles (if possible)"""
 
-    if len(formatted_list) >= (headline_tally + 20):
-        print(headline_tally)
-        headline_tally += 10
-        set_titles(headline_tally, formatted_list)
-        bind_links(headline_tally, formatted_list)
+    if len(formatted_list) >= (headline_tally[0] + 20):
+        headline_tally[0] += 10
+        titles_and_links(formatted_list, headline_tally)
 
 
 def links_and_subtext():
     """
     Returns a tuple containing a list of links to articles and a list of titles and votes,
-    to be sent to alternative_hacker_news
+    to be sent to alternative_hacker_news function
     """
 
     # Get links and subtext from page 1 of hacker news
@@ -152,16 +155,11 @@ def get_formatted_list(links_and_subtext):
     return formatted_list
 
 
-def startup():
-    """Run so that first 10 titles are shown straight away on the gui."""
-
-    bind_links(headline_tally, formatted_list)
-    set_titles(headline_tally, formatted_list)
-
-
-# Formatted list of articles and links
+# Get formatted list of articles and links
+# Only executed once while the program runs, so a refesh requires the program to be restarted
 formatted_list = get_formatted_list(links_and_subtext())
-# UI
+
+# UI --------------------------------------------------------------------------
 root = tk.Tk()
 
 # default window size
@@ -176,7 +174,7 @@ bg.place(relwidth=1, relheight=1)
 root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file=os.path.join(os.getcwd(),
                                                                          'assets/icon.ico'
                                                                          )))
-root.title("Hacker News Scraper")
+root.title("Hacker News Webscraper")
 
 # Make Title Label with link to hacker news
 title_frame = tk.Frame(root)
@@ -190,7 +188,7 @@ title_label = tk.Label(title_frame, bg="gray",
 title_label.place(relx=0.025, rely=0.025, relwidth=0.95, relheight=0.7)
 
 hacker_news_link = tk.Label(title_frame, bg="gray", text="Click here to go to the original Hacker News website (source)", font=(
-    "Helvetica", 10, "underline"), cursor=title_cursor)
+    "Helvetica", 10, "underline"), cursor=TITLE_CURSOR)
 hacker_news_link.place(relx=0.025, rely=0.75, relheight=0.25, relwidth=0.95)
 hacker_news_link.bind(
     "<Button-1>", lambda e: open_url("https://news.ycombinator.com/"))
@@ -243,47 +241,47 @@ bg10.place(relwidth=1, relheight=1)
 # LABELS
 # make title labels
 title_label1 = tk.Label(
-    frame1, bg="gray", font=title_font, cursor=title_cursor)
+    frame1, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label1.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label2 = tk.Label(
-    frame2, bg="gray", font=title_font, cursor=title_cursor)
+    frame2, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label2.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label3 = tk.Label(
-    frame3, bg="gray", font=title_font, cursor=title_cursor)
+    frame3, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label3.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label4 = tk.Label(
-    frame4, bg="gray", font=title_font, cursor=title_cursor)
+    frame4, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label4.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label5 = tk.Label(
-    frame5, bg="gray", font=title_font, cursor=title_cursor)
+    frame5, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label5.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label6 = tk.Label(
-    frame6, bg="gray", font=title_font, cursor=title_cursor)
+    frame6, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label6.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label7 = tk.Label(
-    frame7, bg="gray", font=title_font, cursor=title_cursor)
+    frame7, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label7.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label8 = tk.Label(
-    frame8, bg="gray", font=title_font, cursor=title_cursor)
+    frame8, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label8.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label9 = tk.Label(
-    frame9, bg="gray", font=title_font, cursor=title_cursor)
+    frame9, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label9.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 title_label10 = tk.Label(
-    frame10, bg="gray", font=title_font, cursor=title_cursor)
+    frame10, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label10.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
 # BUTTONS
 # make next and previous buttons
 next_button = ttk.Button(root, text="Next", command=lambda: next_button_function(
-    formatted_list, headline_tally), cursor=title_cursor)
+    formatted_list, headline_tally), cursor=TITLE_CURSOR)
 next_button.place(relx=0.875, rely=0.06, relwidth=0.1, relheight=0.05)
 
 previous_button = ttk.Button(root, text="Previous", command=lambda: previous_button_function(
-    formatted_list, headline_tally), cursor=title_cursor)
+    formatted_list, headline_tally), cursor=TITLE_CURSOR)
 previous_button.place(relx=0.025, rely=0.06, relwidth=0.1, relheight=0.05)
 
 # Displays first 10 articles straight away
-startup()
+titles_and_links(formatted_list, headline_tally)
 
 root.mainloop()
