@@ -66,11 +66,11 @@ def sort_by_points(hn_list):
     return sorted(hn_list, key=lambda x: x["score"], reverse=True)
 
 
-def format_list(sorted_list):
-    """Formats the dictionaries in the sorted list so they can be printed neatly on the console"""
+def print_articles(sorted_list):
+    """Prints the sorted list of dictionaries neatly to the console"""
 
-    for idx, dictionary in enumerate(sorted_list):
-        score, title, link = dictionary["score"], dictionary["title"], dictionary["link"]
+    for dictionary in sorted_list:
+        title, link, score = dictionary.values()
 
         print(f'\n\nTitle: {title}\nScore: {score}\nLink: {link}')
 
@@ -86,7 +86,7 @@ def main():
         add_links(links, soup)
         add_subtext(subtext, soup)
 
-    format_list(sort_by_points(clean(links, subtext)))
+    print_articles(sort_by_points(clean(links, subtext)))
 
 
 if __name__ == "__main__":
