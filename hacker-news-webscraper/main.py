@@ -88,21 +88,20 @@ def bind_links(count, formatted_list):
 
 
 def set_titles(count, formatted_list):
-    """
-    Sets the title for each of the 10 labels on the gui
+    """Sets the title for each of the 10 labels on the gui
     Titles are set according to variable headline_tally, so they may be given in order
     """
 
-    title_label1["text"] = f'{str(count+1)}.{formatted_list[count]["title"]}\nScore: {str(formatted_list[count]["score"])}'
-    title_label2["text"] = f'{str(count+2)}.{formatted_list[count+1]["title"]}\nScore: {str(formatted_list[count+1]["score"])}'
-    title_label3["text"] = f'{str(count+3)}.{formatted_list[count+2]["title"]}\nScore: {str(formatted_list[count+2]["score"])}'
-    title_label4["text"] = f'{str(count+4)}.{formatted_list[count+3]["title"]}\nScore: {str(formatted_list[count+3]["score"])}'
-    title_label5["text"] = f'{str(count+5)}.{formatted_list[count+4]["title"]}\nScore: {str(formatted_list[count+4]["score"])}'
-    title_label6["text"] = f'{str(count+6)}.{formatted_list[count+5]["title"]}\nScore: {str(formatted_list[count+5]["score"])}'
-    title_label7["text"] = f'{str(count+7)}.{formatted_list[count+6]["title"]}\nScore: {str(formatted_list[count+6]["score"])}'
-    title_label8["text"] = f'{str(count+8)}.{formatted_list[count+7]["title"]}\nScore: {str(formatted_list[count+7]["score"])}'
-    title_label9["text"] = f'{str(count+9)}.{formatted_list[count+8]["title"]}\nScore: {str(formatted_list[count+8]["score"])}'
-    title_label10["text"] = f'{str(count+10)}.{formatted_list[count+9]["title"]}\nScore: {str(formatted_list[count+9]["score"])}'
+    title_label1["text"] = f'{str(count+1)}. {formatted_list[count]["title"]}\nScore: {str(formatted_list[count]["score"])}'
+    title_label2["text"] = f'{str(count+2)}. {formatted_list[count+1]["title"]}\nScore: {str(formatted_list[count+1]["score"])}'
+    title_label3["text"] = f'{str(count+3)}. {formatted_list[count+2]["title"]}\nScore: {str(formatted_list[count+2]["score"])}'
+    title_label4["text"] = f'{str(count+4)}. {formatted_list[count+3]["title"]}\nScore: {str(formatted_list[count+3]["score"])}'
+    title_label5["text"] = f'{str(count+5)}. {formatted_list[count+4]["title"]}\nScore: {str(formatted_list[count+4]["score"])}'
+    title_label6["text"] = f'{str(count+6)}. {formatted_list[count+5]["title"]}\nScore: {str(formatted_list[count+5]["score"])}'
+    title_label7["text"] = f'{str(count+7)}. {formatted_list[count+6]["title"]}\nScore: {str(formatted_list[count+6]["score"])}'
+    title_label8["text"] = f'{str(count+8)}. {formatted_list[count+7]["title"]}\nScore: {str(formatted_list[count+7]["score"])}'
+    title_label9["text"] = f'{str(count+9)}. {formatted_list[count+8]["title"]}\nScore: {str(formatted_list[count+8]["score"])}'
+    title_label10["text"] = f'{str(count+10)}. {formatted_list[count+9]["title"]}\nScore: {str(formatted_list[count+9]["score"])}'
 
 
 def titles_and_links(formatted_list, headline_tally):
