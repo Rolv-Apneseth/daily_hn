@@ -15,6 +15,7 @@ TITLE_CURSOR = "hand2"
 # A list so that variable changes from within the scope of functions are changed
 headline_tally = [0]
 
+
 def alternative_hacker_news(links, subtext):
     """
     Returns an organised list of dictionaries which display title,
@@ -170,8 +171,9 @@ bg = tk.Label(root, bg="black", bd=15)
 bg.place(relwidth=1, relheight=1)
 
 # Set icon and title for window
-root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file=os.path.join(os.getcwd(),
-                                                                         'assets/icon.ico'
+root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file=os.path.join(os.path.dirname(__file__),
+                                                                         'assets',
+                                                                         'icon.ico'
                                                                          )))
 root.title("Hacker News Webscraper")
 
