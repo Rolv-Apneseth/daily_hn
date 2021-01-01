@@ -38,6 +38,15 @@ def add_subtext(subtext, soup):
     return subtext
 
 
+def fix_item_link(href):
+    """
+    Fixes links which point to specific items in the hacker news
+    website itself, as they just point to specific pages on the site.
+    """
+
+    return "https://news.ycombinator.com/" + href
+
+
 def clean(links, subtext):
     """
     Organises the links and subtext lists given from the soup into a list of dictionaries which display title,
@@ -45,10 +54,15 @@ def clean(links, subtext):
     """
 
     hn = []
-    for inx, item in enumerate(links):
+    for inx, _ in enumerate(links):
         vote = subtext[inx].select(".score")
         title = links[inx].getText()
         href = links[inx].get("href", None)
+
+        # Fix link if it needs fixing
+        if not href.startswith("http"):
+            href = fix_item_link(href)
+
         # If statement in case article has not yet received any votes so does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
@@ -72,7 +86,7 @@ def print_articles(sorted_list):
     for dictionary in sorted_list:
         title, link, score = dictionary.values()
 
-        print(f'\n\nTitle: {title}\nScore: {score}\nLink: {link}')
+        print(f"\n\nTitle: {title}\nScore: {score}\nLink: {link}")
 
 
 def main():
@@ -81,7 +95,10 @@ def main():
     links = get_links(soup)
     subtext = get_subtext(soup)
     # Add links and subtext from pages 2 and 3 of hacker news
-    for link in ["https://news.ycombinator.com/news?p=2", "https://news.ycombinator.com/news?p=3"]:
+    for link in [
+        "https://news.ycombinator.com/news?p=2",
+        "https://news.ycombinator.com/news?p=3",
+    ]:
         soup = get_soup(link)
         add_links(links, soup)
         add_subtext(subtext, soup)
