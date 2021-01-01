@@ -27,6 +27,13 @@ def alternative_hacker_news(links, subtext):
         vote = subtext[inx].select(".score")
         title = links[inx].getText()
         href = links[inx].get("href", None)
+
+        # Fix link if it needs fixing
+        # This is done to links which point back to
+        # a different page on the hn website itself
+        if not href.startswith("http"):
+            href = parse_script.fix_item_link(href)
+
         # If statement in case article has not yet received any votes so does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
@@ -66,26 +73,34 @@ def open_url(url):
 def bind_links(count, formatted_list):
     """Binds the open_url function onto each title so that they can simply be clicked to open the respective link"""
 
-    title_label1.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count]["link"]))
+    title_label1.bind("<Button-1>", lambda e: open_url(formatted_list[count]["link"]))
     title_label2.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 1]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 1]["link"])
+    )
     title_label3.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 2]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 2]["link"])
+    )
     title_label4.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 3]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 3]["link"])
+    )
     title_label5.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 4]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 4]["link"])
+    )
     title_label6.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 5]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 5]["link"])
+    )
     title_label7.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 6]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 6]["link"])
+    )
     title_label8.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 7]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 7]["link"])
+    )
     title_label9.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 8]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 8]["link"])
+    )
     title_label10.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 9]["link"]))
+        "<Button-1>", lambda e: open_url(formatted_list[count + 9]["link"])
+    )
 
 
 def set_titles(count, formatted_list):
@@ -93,16 +108,36 @@ def set_titles(count, formatted_list):
     Titles are set according to variable headline_tally, so they may be given in order
     """
 
-    title_label1["text"] = f'{str(count+1)}. {formatted_list[count]["title"]}\nScore: {str(formatted_list[count]["score"])}'
-    title_label2["text"] = f'{str(count+2)}. {formatted_list[count+1]["title"]}\nScore: {str(formatted_list[count+1]["score"])}'
-    title_label3["text"] = f'{str(count+3)}. {formatted_list[count+2]["title"]}\nScore: {str(formatted_list[count+2]["score"])}'
-    title_label4["text"] = f'{str(count+4)}. {formatted_list[count+3]["title"]}\nScore: {str(formatted_list[count+3]["score"])}'
-    title_label5["text"] = f'{str(count+5)}. {formatted_list[count+4]["title"]}\nScore: {str(formatted_list[count+4]["score"])}'
-    title_label6["text"] = f'{str(count+6)}. {formatted_list[count+5]["title"]}\nScore: {str(formatted_list[count+5]["score"])}'
-    title_label7["text"] = f'{str(count+7)}. {formatted_list[count+6]["title"]}\nScore: {str(formatted_list[count+6]["score"])}'
-    title_label8["text"] = f'{str(count+8)}. {formatted_list[count+7]["title"]}\nScore: {str(formatted_list[count+7]["score"])}'
-    title_label9["text"] = f'{str(count+9)}. {formatted_list[count+8]["title"]}\nScore: {str(formatted_list[count+8]["score"])}'
-    title_label10["text"] = f'{str(count+10)}. {formatted_list[count+9]["title"]}\nScore: {str(formatted_list[count+9]["score"])}'
+    title_label1[
+        "text"
+    ] = f'{str(count+1)}. {formatted_list[count]["title"]}\nScore: {str(formatted_list[count]["score"])}'
+    title_label2[
+        "text"
+    ] = f'{str(count+2)}. {formatted_list[count+1]["title"]}\nScore: {str(formatted_list[count+1]["score"])}'
+    title_label3[
+        "text"
+    ] = f'{str(count+3)}. {formatted_list[count+2]["title"]}\nScore: {str(formatted_list[count+2]["score"])}'
+    title_label4[
+        "text"
+    ] = f'{str(count+4)}. {formatted_list[count+3]["title"]}\nScore: {str(formatted_list[count+3]["score"])}'
+    title_label5[
+        "text"
+    ] = f'{str(count+5)}. {formatted_list[count+4]["title"]}\nScore: {str(formatted_list[count+4]["score"])}'
+    title_label6[
+        "text"
+    ] = f'{str(count+6)}. {formatted_list[count+5]["title"]}\nScore: {str(formatted_list[count+5]["score"])}'
+    title_label7[
+        "text"
+    ] = f'{str(count+7)}. {formatted_list[count+6]["title"]}\nScore: {str(formatted_list[count+6]["score"])}'
+    title_label8[
+        "text"
+    ] = f'{str(count+8)}. {formatted_list[count+7]["title"]}\nScore: {str(formatted_list[count+7]["score"])}'
+    title_label9[
+        "text"
+    ] = f'{str(count+9)}. {formatted_list[count+8]["title"]}\nScore: {str(formatted_list[count+8]["score"])}'
+    title_label10[
+        "text"
+    ] = f'{str(count+10)}. {formatted_list[count+9]["title"]}\nScore: {str(formatted_list[count+9]["score"])}'
 
 
 def titles_and_links(formatted_list, headline_tally):
@@ -138,7 +173,10 @@ def links_and_subtext():
     links = parse_script.get_links(soup)
     subtext = parse_script.get_subtext(soup)
     # Add links and subtext from pages 2 and 3 of hacker news
-    for link in ["https://news.ycombinator.com/news?p=2", "https://news.ycombinator.com/news?p=3"]:
+    for link in [
+        "https://news.ycombinator.com/news?p=2",
+        "https://news.ycombinator.com/news?p=3",
+    ]:
         soup = parse_script.get_soup(link)
         parse_script.add_links(links, soup)
         parse_script.add_subtext(subtext, soup)
@@ -149,8 +187,11 @@ def links_and_subtext():
 def get_formatted_list(links_and_subtext):
     """Gets a formatted list of all the articles with over 150 points"""
 
-    formatted_list = format_titles(sort_by_points(
-        alternative_hacker_news(links_and_subtext[0], links_and_subtext[1])))
+    formatted_list = format_titles(
+        sort_by_points(
+            alternative_hacker_news(links_and_subtext[0], links_and_subtext[1])
+        )
+    )
 
     return formatted_list
 
@@ -171,10 +212,12 @@ bg = tk.Label(root, bg="black", bd=15)
 bg.place(relwidth=1, relheight=1)
 
 # Set icon and title for window
-root.tk.call('wm', 'iconphoto', root._w, tk.PhotoImage(file=os.path.join(os.path.dirname(__file__),
-                                                                         'assets',
-                                                                         'icon.ico'
-                                                                         )))
+root.tk.call(
+    "wm",
+    "iconphoto",
+    root._w,
+    tk.PhotoImage(file=os.path.join(os.path.dirname(__file__), "assets", "icon.ico")),
+)
 root.title("Hacker News Webscraper")
 
 # Make Title Label with link to hacker news
@@ -184,15 +227,23 @@ title_frame.place(relx=0.2, rely=0.01, relwidth=0.6, relheight=0.1)
 title_background = tk.Label(title_frame, bg="gray")
 title_background.place(relwidth=1, relheight=1)
 
-title_label = tk.Label(title_frame, bg="gray",
-                       text="Hacker News Parser Display", font=("Helvetica", 18, "bold"))
+title_label = tk.Label(
+    title_frame,
+    bg="gray",
+    text="Hacker News Parser Display",
+    font=("Helvetica", 18, "bold"),
+)
 title_label.place(relx=0.025, rely=0.025, relwidth=0.95, relheight=0.7)
 
-hacker_news_link = tk.Label(title_frame, bg="gray", text="Click here to go to the original Hacker News website (source)", font=(
-    "Helvetica", 10, "underline"), cursor=TITLE_CURSOR)
+hacker_news_link = tk.Label(
+    title_frame,
+    bg="gray",
+    text="Click here to go to the original Hacker News website (source)",
+    font=("Helvetica", 10, "underline"),
+    cursor=TITLE_CURSOR,
+)
 hacker_news_link.place(relx=0.025, rely=0.75, relheight=0.25, relwidth=0.95)
-hacker_news_link.bind(
-    "<Button-1>", lambda e: open_url("https://news.ycombinator.com/"))
+hacker_news_link.bind("<Button-1>", lambda e: open_url("https://news.ycombinator.com/"))
 
 # FRAMES
 # make frames
@@ -241,45 +292,43 @@ bg10.place(relwidth=1, relheight=1)
 
 # LABELS
 # make title labels
-title_label1 = tk.Label(
-    frame1, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label1 = tk.Label(frame1, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label1.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label2 = tk.Label(
-    frame2, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label2 = tk.Label(frame2, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label2.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label3 = tk.Label(
-    frame3, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label3 = tk.Label(frame3, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label3.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label4 = tk.Label(
-    frame4, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label4 = tk.Label(frame4, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label4.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label5 = tk.Label(
-    frame5, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label5 = tk.Label(frame5, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label5.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label6 = tk.Label(
-    frame6, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label6 = tk.Label(frame6, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label6.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label7 = tk.Label(
-    frame7, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label7 = tk.Label(frame7, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label7.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label8 = tk.Label(
-    frame8, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label8 = tk.Label(frame8, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label8.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label9 = tk.Label(
-    frame9, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label9 = tk.Label(frame9, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label9.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label10 = tk.Label(
-    frame10, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label10 = tk.Label(frame10, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
 title_label10.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
 # BUTTONS
 # make next and previous buttons
-next_button = ttk.Button(root, text="Next", command=lambda: next_button_function(
-    formatted_list, headline_tally), cursor=TITLE_CURSOR)
+next_button = ttk.Button(
+    root,
+    text="Next",
+    command=lambda: next_button_function(formatted_list, headline_tally),
+    cursor=TITLE_CURSOR,
+)
 next_button.place(relx=0.875, rely=0.06, relwidth=0.1, relheight=0.05)
 
-previous_button = ttk.Button(root, text="Previous", command=lambda: previous_button_function(
-    formatted_list, headline_tally), cursor=TITLE_CURSOR)
+previous_button = ttk.Button(
+    root,
+    text="Previous",
+    command=lambda: previous_button_function(formatted_list, headline_tally),
+    cursor=TITLE_CURSOR,
+)
 previous_button.place(relx=0.025, rely=0.06, relwidth=0.1, relheight=0.05)
 
 # Displays first 10 articles straight away
