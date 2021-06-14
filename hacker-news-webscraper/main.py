@@ -11,8 +11,8 @@ import parse_script
 TITLE_FONT = ("Helvetica", 12, "underline", "bold")
 TITLE_CURSOR = "hand2"
 
-# Variable to keep track of the index of the article in display, for displaying different articles as only 10 fit on the gui at one time
-# A list so that variable changes from within the scope of functions are changed
+# Variable to keep track of the index of the article in display, for
+# displaying different articles as only 10 fit on the gui at one time
 headline_tally = [0]
 
 
@@ -28,13 +28,12 @@ def alternative_hacker_news(links, subtext):
         title = links[inx].getText()
         href = links[inx].get("href", None)
 
-        # Fix link if it needs fixing
-        # This is done to links which point back to
-        # a different page on the hn website itself
+        # Fix links which point back to the Y Combinator website itself
         if not href.startswith("http"):
             href = parse_script.fix_item_link(href)
 
-        # If statement in case article has not yet received any votes so does not have a vote category
+        # If statement in case article has not yet received any votes so
+        # does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
             # Change 150 to a lower number if you want to see more articles
@@ -45,7 +44,10 @@ def alternative_hacker_news(links, subtext):
 
 
 def sort_by_points(hn_list):
-    """Returns a sorted list of dictionaries from alternative_hacker_news to be ordered by score (highest first)"""
+    """
+    Returns a sorted list of dictionaries from alternative_hacker_news to
+    be ordered by score (highest first).
+    """
 
     sorted_list = sorted(hn_list, key=lambda k: k["score"], reverse=True)
 
@@ -53,7 +55,11 @@ def sort_by_points(hn_list):
 
 
 def format_titles(sorted_list):
-    """Returns a list of dictionaries where the titles within the dictionaries are formatted so that they have wrapped text (to fit inside their given labels)"""
+    """
+    Returns a list of dictionaries where the titles within the
+    dictionaries are formatted so that they have wrapped text
+    (to fit inside their given labels).
+    """
 
     wrap_size = 30
     formatted_list = sorted_list
@@ -65,13 +71,19 @@ def format_titles(sorted_list):
 
 
 def open_url(url):
-    """Opens the given url with the default browser, to be activated when a title is clicked"""
+    """
+    Opens the given url with the default browser, to be activated when
+    a title is clicked.
+    """
 
     webbrowser.open_new(url)
 
 
 def bind_links(count, formatted_list):
-    """Binds the open_url function onto each title so that they can simply be clicked to open the respective link"""
+    """
+    Binds the open_url function onto each title so that they can simply be
+    clicked to open the respective link.
+    """
 
     title_label1.bind("<Button-1>", lambda e: open_url(formatted_list[count]["link"]))
     title_label2.bind(
@@ -104,8 +116,11 @@ def bind_links(count, formatted_list):
 
 
 def set_titles(count, formatted_list):
-    """Sets the title for each of the 10 labels on the gui
-    Titles are set according to variable headline_tally, so they may be given in order
+    """
+    Sets the title for each of the 10 labels on the gui.
+
+    Titles are set according to variable headline_tally, so that they may
+    be given in order.
     """
 
     title_label1[
@@ -141,21 +156,21 @@ def set_titles(count, formatted_list):
 
 
 def titles_and_links(formatted_list, headline_tally):
-    """Helper function to run bind_links and set_titles functions"""
+    """Helper function to run bind_links and set_titles functions."""
 
     bind_links(headline_tally[0], formatted_list)
     set_titles(headline_tally[0], formatted_list)
 
 
 def previous_button_function(formatted_list, headline_tally):
-    """Shows previous 10 articles (if possible)"""
+    """Shows previous 10 articles (if possible)."""
     if headline_tally[0] >= 10:
         headline_tally[0] -= 10
         titles_and_links(formatted_list, headline_tally)
 
 
 def next_button_function(formatted_list, headline_tally):
-    """Shows next 10 articles (if possible)"""
+    """Shows next 10 articles (if possible)."""
 
     if len(formatted_list) >= (headline_tally[0] + 20):
         headline_tally[0] += 10
@@ -164,8 +179,8 @@ def next_button_function(formatted_list, headline_tally):
 
 def links_and_subtext():
     """
-    Returns a tuple containing a list of links to articles and a list of titles and votes,
-    to be sent to alternative_hacker_news function
+    Returns a tuple containing a list of links to articles and a list of
+    titles and votes, to be sent to the alternative_hacker_news function.
     """
 
     # Get links and subtext from page 1 of hacker news
@@ -197,17 +212,18 @@ def get_formatted_list(links_and_subtext):
 
 
 # Get formatted list of articles and links
-# Only executed once while the program runs, so a refesh requires the program to be restarted
+# Only executed once while the program runs, so a refesh requires the
+# program to be restarted
 formatted_list = get_formatted_list(links_and_subtext())
 
 # UI --------------------------------------------------------------------------
 root = tk.Tk()
 
-# default window size
+# Default window size
 default_window = tk.Canvas(root, height=900, width=800)
 default_window.pack()
 
-# background
+# Background
 bg = tk.Label(root, bg="black", bd=15)
 bg.place(relwidth=1, relheight=1)
 
@@ -246,7 +262,7 @@ hacker_news_link.place(relx=0.025, rely=0.75, relheight=0.25, relwidth=0.95)
 hacker_news_link.bind("<Button-1>", lambda e: open_url("https://news.ycombinator.com/"))
 
 # FRAMES
-# make frames
+# Make frames
 frame1 = tk.Frame(root)
 frame2 = tk.Frame(root)
 frame3 = tk.Frame(root)
@@ -257,7 +273,7 @@ frame7 = tk.Frame(root)
 frame8 = tk.Frame(root)
 frame9 = tk.Frame(root)
 frame10 = tk.Frame(root)
-# place the frames
+# Place the frames
 frame1.place(relx=0.025, rely=0.125, relwidth=0.45, relheight=0.15)
 frame2.place(relx=0.025, rely=0.3, relwidth=0.45, relheight=0.15)
 frame3.place(relx=0.025, rely=0.475, relwidth=0.45, relheight=0.15)
@@ -268,7 +284,7 @@ frame7.place(relx=0.525, rely=0.3, relwidth=0.45, relheight=0.15)
 frame8.place(relx=0.525, rely=0.475, relwidth=0.45, relheight=0.15)
 frame9.place(relx=0.525, rely=0.65, relwidth=0.45, relheight=0.15)
 frame10.place(relx=0.525, rely=0.825, relwidth=0.45, relheight=0.15)
-# frame backgrounds
+# Frame backgrounds
 bg1 = tk.Label(frame1, bg="gray")
 bg1.place(relwidth=1, relheight=1)
 bg2 = tk.Label(frame2, bg="gray")
@@ -314,7 +330,7 @@ title_label10 = tk.Label(frame10, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSO
 title_label10.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
 # BUTTONS
-# make next and previous buttons
+# Make 'next' and 'previous' buttons
 next_button = ttk.Button(
     root,
     text="Next",

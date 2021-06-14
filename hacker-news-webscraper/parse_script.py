@@ -11,14 +11,17 @@ def get_soup(link):
 
 
 def get_links(soup):
-    """Gets the story links from the given hacker news soup."""
+    """Gets the story links from the given hacker soup."""
 
     links = soup.select(".storylink")
     return links
 
 
 def add_links(links, soup):
-    """Adds links to the existing links variable, used for scraping pages 2 and 3 of hacker news"""
+    """
+    Adds links to the existing links variable, used for scraping additional
+    pages of hacker news.
+    """
 
     links += soup.select(".storylink")
     return links
@@ -32,7 +35,10 @@ def get_subtext(soup):
 
 
 def add_subtext(subtext, soup):
-    """Adds subtext to the existing subtext variable, used for scraping pages 2 and 3 of hacker news"""
+    """
+    Adds subtext to the existing subtext variable, used for scraping pages
+    2 and 3 of hacker news.
+    """
 
     subtext += soup.select(".subtext")
     return subtext
@@ -49,8 +55,11 @@ def fix_item_link(href):
 
 def clean(links, subtext):
     """
-    Organises the links and subtext lists given from the soup into a list of dictionaries which display title,
-    link and votes to each article, if the article has more than 150 votes, then returns this list.
+    Organises the links and subtext lists given from the soup into a list
+    of dictionaries which display title, link and votes to each article.
+
+    If the article has more than 150 votes, then it is included in the page
+    returned list.
     """
 
     hn = []
@@ -63,7 +72,8 @@ def clean(links, subtext):
         if not href.startswith("http"):
             href = fix_item_link(href)
 
-        # If statement in case article has not yet received any votes so does not have a vote category
+        # If statement in case article has not yet received any votes so
+        # does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
             # Change 100 to a lower number if you want to see more articles
@@ -76,7 +86,7 @@ def clean(links, subtext):
 def sort_by_points(hn_list):
     """Sorts the given list of dictionaries by the score category."""
 
-    # reversed so that the list is in descending order
+    # Reversed so that the list is in descending order
     return sorted(hn_list, key=lambda x: x["score"], reverse=True)
 
 
