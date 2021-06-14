@@ -8,7 +8,10 @@ import parse_script
 
 
 # Font and cursor for gui
-TITLE_FONT = ("Helvetica", 16, "bold")
+HEADER_FONT = ("Helvetica", 20, "bold")
+TITLE_FONT = ("Helvetica", 15, "bold")
+LINK_FONT = ("Helvetica", 11, "underline")
+BUTTON_FONT = ("Helvetica", 12)
 TITLE_CURSOR = "hand2"
 
 # Minimum votes for article to be included
@@ -17,6 +20,8 @@ MIN_SCORE = 150
 # UI colours
 BG_PRIMARY = "#1F1B24"
 BG_SECONDARY = "#373040"
+BG_BUTTON = "#b53930"
+BG_BUTTON_HOVER = "#c93f36"
 TEXT = "#cccccc"
 
 # Variable to keep track of the index of the article in display, for
@@ -254,8 +259,8 @@ title_background.place(relwidth=1, relheight=1)
 title_label = tk.Label(
     title_frame,
     bg=BG_SECONDARY,
-    text="Hacker News Parser Display",
-    font=("Helvetica", 18, "bold"),
+    text="Hacker News Webscraper",
+    font=HEADER_FONT,
     fg=TEXT,
 )
 title_label.place(relx=0.025, rely=0.025, relwidth=0.95, relheight=0.7)
@@ -263,8 +268,8 @@ title_label.place(relx=0.025, rely=0.025, relwidth=0.95, relheight=0.7)
 hacker_news_link = tk.Label(
     title_frame,
     bg=BG_SECONDARY,
-    text="Click here to go to the original Hacker News website (source)",
-    font=("Helvetica", 10, "underline"),
+    text="Original website (source)",
+    font=LINK_FONT,
     cursor=TITLE_CURSOR,
     fg=TEXT,
 )
@@ -361,6 +366,15 @@ title_label10.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
 # BUTTONS
 # Make 'next' and 'previous' buttons
+style = ttk.Style()
+style.configure(
+    "TButton",
+    background=BG_BUTTON,
+    foreground=TEXT,
+    font=BUTTON_FONT,
+)
+style.map("TButton", background=[("active", BG_BUTTON_HOVER)])
+
 next_button = ttk.Button(
     root,
     text="Next",
