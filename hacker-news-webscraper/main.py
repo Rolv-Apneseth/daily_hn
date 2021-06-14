@@ -8,18 +8,31 @@ import parse_script
 
 
 # Font and cursor for gui
-TITLE_FONT = ("Helvetica", 12, "underline", "bold")
+HEADER_FONT = ("Helvetica", 20, "bold")
+TITLE_FONT = ("Helvetica", 15, "bold")
+LINK_FONT = ("Helvetica", 11, "underline")
+BUTTON_FONT = ("Helvetica", 12)
 TITLE_CURSOR = "hand2"
 
-# Variable to keep track of the index of the article in display, for displaying different articles as only 10 fit on the gui at one time
-# A list so that variable changes from within the scope of functions are changed
+# Minimum votes for article to be included
+MIN_SCORE = 150
+
+# UI colours
+BG_PRIMARY = "#1F1B24"
+BG_SECONDARY = "#373040"
+BG_BUTTON = "#b53930"
+BG_BUTTON_HOVER = "#c93f36"
+TEXT = "#cccccc"
+
+# Variable to keep track of the index of the article in display, for
+# displaying different articles as only 10 fit on the gui at one time
 headline_tally = [0]
 
 
 def alternative_hacker_news(links, subtext):
     """
-    Returns an organised list of dictionaries which display title,
-    link and votes to each article, if the article has more than 150 votes.
+    Returns an organised list of dictionaries which display title, link and votes
+    to each article, if the article has at least MIN_SCORE votes.
     """
 
     hn = []
@@ -28,24 +41,26 @@ def alternative_hacker_news(links, subtext):
         title = links[inx].getText()
         href = links[inx].get("href", None)
 
-        # Fix link if it needs fixing
-        # This is done to links which point back to
-        # a different page on the hn website itself
+        # Fix links which point back to the Y Combinator website itself
         if not href.startswith("http"):
             href = parse_script.fix_item_link(href)
 
-        # If statement in case article has not yet received any votes so does not have a vote category
+        # If statement in case article has not yet received any votes so
+        # does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
-            # Change 150 to a lower number if you want to see more articles
-            if points > 150:
+
+            if points >= MIN_SCORE:
                 hn.append({"title": title, "link": href, "score": points})
 
     return hn
 
 
 def sort_by_points(hn_list):
-    """Returns a sorted list of dictionaries from alternative_hacker_news to be ordered by score (highest first)"""
+    """
+    Returns a sorted list of dictionaries from alternative_hacker_news to
+    be ordered by score (highest first).
+    """
 
     sorted_list = sorted(hn_list, key=lambda k: k["score"], reverse=True)
 
@@ -53,7 +68,11 @@ def sort_by_points(hn_list):
 
 
 def format_titles(sorted_list):
-    """Returns a list of dictionaries where the titles within the dictionaries are formatted so that they have wrapped text (to fit inside their given labels)"""
+    """
+    Returns a list of dictionaries where the titles within the
+    dictionaries are formatted so that they have wrapped text
+    (to fit inside their given labels).
+    """
 
     wrap_size = 30
     formatted_list = sorted_list
@@ -65,13 +84,19 @@ def format_titles(sorted_list):
 
 
 def open_url(url):
-    """Opens the given url with the default browser, to be activated when a title is clicked"""
+    """
+    Opens the given url with the default browser, to be activated when
+    a title is clicked.
+    """
 
     webbrowser.open_new(url)
 
 
 def bind_links(count, formatted_list):
-    """Binds the open_url function onto each title so that they can simply be clicked to open the respective link"""
+    """
+    Binds the open_url function onto each title so that they can simply be
+    clicked to open the respective link.
+    """
 
     title_label1.bind("<Button-1>", lambda e: open_url(formatted_list[count]["link"]))
     title_label2.bind(
@@ -104,8 +129,11 @@ def bind_links(count, formatted_list):
 
 
 def set_titles(count, formatted_list):
-    """Sets the title for each of the 10 labels on the gui
-    Titles are set according to variable headline_tally, so they may be given in order
+    """
+    Sets the title for each of the 10 labels on the gui.
+
+    Titles are set according to variable headline_tally, so that they may
+    be given in order.
     """
 
     title_label1[
@@ -141,21 +169,21 @@ def set_titles(count, formatted_list):
 
 
 def titles_and_links(formatted_list, headline_tally):
-    """Helper function to run bind_links and set_titles functions"""
+    """Helper function to run bind_links and set_titles functions."""
 
     bind_links(headline_tally[0], formatted_list)
     set_titles(headline_tally[0], formatted_list)
 
 
 def previous_button_function(formatted_list, headline_tally):
-    """Shows previous 10 articles (if possible)"""
+    """Shows previous 10 articles (if possible)."""
     if headline_tally[0] >= 10:
         headline_tally[0] -= 10
         titles_and_links(formatted_list, headline_tally)
 
 
 def next_button_function(formatted_list, headline_tally):
-    """Shows next 10 articles (if possible)"""
+    """Shows next 10 articles (if possible)."""
 
     if len(formatted_list) >= (headline_tally[0] + 20):
         headline_tally[0] += 10
@@ -164,8 +192,8 @@ def next_button_function(formatted_list, headline_tally):
 
 def links_and_subtext():
     """
-    Returns a tuple containing a list of links to articles and a list of titles and votes,
-    to be sent to alternative_hacker_news function
+    Returns a tuple containing a list of links to articles and a list of
+    titles and votes, to be sent to the alternative_hacker_news function.
     """
 
     # Get links and subtext from page 1 of hacker news
@@ -197,18 +225,19 @@ def get_formatted_list(links_and_subtext):
 
 
 # Get formatted list of articles and links
-# Only executed once while the program runs, so a refesh requires the program to be restarted
+# Only executed once while the program runs, so a refresh requires the
+# program to be restarted
 formatted_list = get_formatted_list(links_and_subtext())
 
 # UI --------------------------------------------------------------------------
 root = tk.Tk()
 
-# default window size
+# Default window size
 default_window = tk.Canvas(root, height=900, width=800)
 default_window.pack()
 
-# background
-bg = tk.Label(root, bg="black", bd=15)
+# Background
+bg = tk.Label(root, bg=BG_PRIMARY, bd=15)
 bg.place(relwidth=1, relheight=1)
 
 # Set icon and title for window
@@ -224,29 +253,31 @@ root.title("Hacker News Webscraper")
 title_frame = tk.Frame(root)
 title_frame.place(relx=0.2, rely=0.01, relwidth=0.6, relheight=0.1)
 
-title_background = tk.Label(title_frame, bg="gray")
+title_background = tk.Label(title_frame, bg=BG_SECONDARY)
 title_background.place(relwidth=1, relheight=1)
 
 title_label = tk.Label(
     title_frame,
-    bg="gray",
-    text="Hacker News Parser Display",
-    font=("Helvetica", 18, "bold"),
+    bg=BG_SECONDARY,
+    text="Hacker News Webscraper",
+    font=HEADER_FONT,
+    fg=TEXT,
 )
 title_label.place(relx=0.025, rely=0.025, relwidth=0.95, relheight=0.7)
 
 hacker_news_link = tk.Label(
     title_frame,
-    bg="gray",
-    text="Click here to go to the original Hacker News website (source)",
-    font=("Helvetica", 10, "underline"),
+    bg=BG_SECONDARY,
+    text="Original website (source)",
+    font=LINK_FONT,
     cursor=TITLE_CURSOR,
+    fg=TEXT,
 )
 hacker_news_link.place(relx=0.025, rely=0.75, relheight=0.25, relwidth=0.95)
 hacker_news_link.bind("<Button-1>", lambda e: open_url("https://news.ycombinator.com/"))
 
 # FRAMES
-# make frames
+# Make frames
 frame1 = tk.Frame(root)
 frame2 = tk.Frame(root)
 frame3 = tk.Frame(root)
@@ -257,7 +288,7 @@ frame7 = tk.Frame(root)
 frame8 = tk.Frame(root)
 frame9 = tk.Frame(root)
 frame10 = tk.Frame(root)
-# place the frames
+# Place the frames
 frame1.place(relx=0.025, rely=0.125, relwidth=0.45, relheight=0.15)
 frame2.place(relx=0.025, rely=0.3, relwidth=0.45, relheight=0.15)
 frame3.place(relx=0.025, rely=0.475, relwidth=0.45, relheight=0.15)
@@ -268,53 +299,82 @@ frame7.place(relx=0.525, rely=0.3, relwidth=0.45, relheight=0.15)
 frame8.place(relx=0.525, rely=0.475, relwidth=0.45, relheight=0.15)
 frame9.place(relx=0.525, rely=0.65, relwidth=0.45, relheight=0.15)
 frame10.place(relx=0.525, rely=0.825, relwidth=0.45, relheight=0.15)
-# frame backgrounds
-bg1 = tk.Label(frame1, bg="gray")
+# Frame backgrounds
+bg1 = tk.Label(frame1, bg=BG_SECONDARY)
 bg1.place(relwidth=1, relheight=1)
-bg2 = tk.Label(frame2, bg="gray")
+bg2 = tk.Label(frame2, bg=BG_SECONDARY)
 bg2.place(relwidth=1, relheight=1)
-bg3 = tk.Label(frame3, bg="gray")
+bg3 = tk.Label(frame3, bg=BG_SECONDARY)
 bg3.place(relwidth=1, relheight=1)
-bg4 = tk.Label(frame4, bg="gray")
+bg4 = tk.Label(frame4, bg=BG_SECONDARY)
 bg4.place(relwidth=1, relheight=1)
-bg5 = tk.Label(frame5, bg="gray")
+bg5 = tk.Label(frame5, bg=BG_SECONDARY)
 bg5.place(relwidth=1, relheight=1)
-bg6 = tk.Label(frame6, bg="gray")
+bg6 = tk.Label(frame6, bg=BG_SECONDARY)
 bg6.place(relwidth=1, relheight=1)
-bg7 = tk.Label(frame7, bg="gray")
+bg7 = tk.Label(frame7, bg=BG_SECONDARY)
 bg7.place(relwidth=1, relheight=1)
-bg8 = tk.Label(frame8, bg="gray")
+bg8 = tk.Label(frame8, bg=BG_SECONDARY)
 bg8.place(relwidth=1, relheight=1)
-bg9 = tk.Label(frame9, bg="gray")
+bg9 = tk.Label(frame9, bg=BG_SECONDARY)
 bg9.place(relwidth=1, relheight=1)
-bg10 = tk.Label(frame10, bg="gray")
+bg10 = tk.Label(frame10, bg=BG_SECONDARY)
 bg10.place(relwidth=1, relheight=1)
 
 # LABELS
 # make title labels
-title_label1 = tk.Label(frame1, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label1 = tk.Label(
+    frame1, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label1.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label2 = tk.Label(frame2, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label2 = tk.Label(
+    frame2, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label2.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label3 = tk.Label(frame3, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label3 = tk.Label(
+    frame3, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label3.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label4 = tk.Label(frame4, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label4 = tk.Label(
+    frame4, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label4.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label5 = tk.Label(frame5, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label5 = tk.Label(
+    frame5, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label5.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label6 = tk.Label(frame6, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label6 = tk.Label(
+    frame6, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label6.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label7 = tk.Label(frame7, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label7 = tk.Label(
+    frame7, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label7.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label8 = tk.Label(frame8, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label8 = tk.Label(
+    frame8, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label8.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label9 = tk.Label(frame9, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label9 = tk.Label(
+    frame9, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label9.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label10 = tk.Label(frame10, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label10 = tk.Label(
+    frame10, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label10.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
 # BUTTONS
-# make next and previous buttons
+# Make 'next' and 'previous' buttons
+style = ttk.Style()
+style.configure(
+    "TButton",
+    background=BG_BUTTON,
+    foreground=TEXT,
+    font=BUTTON_FONT,
+)
+style.map("TButton", background=[("active", BG_BUTTON_HOVER)])
+
 next_button = ttk.Button(
     root,
     text="Next",

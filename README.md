@@ -25,6 +25,6 @@ Webscraper with a tkinter ui which displays some of the currently most voted hea
 2. To visit any of the listed articles, simply click on the article name and your browser will open on that page.
 3. If there are another 10 articles available with more than 100 votes, pressing next on the top right will navigate to the next page.
 
-Alternatively, you can execute the parse_script.py to display the articles in the terminal. Note that the links here will not neccessarily be clickable (depending on what terminal/command line you use).
+Alternatively, you can execute the parse_script.py to display the articles in the terminal. Note that the links here will not necessarily be clickable, as it depends on what terminal/command line you use.
 
 The original Hacker News website can be found [here](https://news.ycombinator.com/) or by clicking the link at the top of the program.
