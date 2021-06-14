@@ -8,8 +8,16 @@ import parse_script
 
 
 # Font and cursor for gui
-TITLE_FONT = ("Helvetica", 12, "underline", "bold")
+TITLE_FONT = ("Helvetica", 16, "bold")
 TITLE_CURSOR = "hand2"
+
+# Minimum votes for article to be included
+MIN_SCORE = 150
+
+# UI colours
+BG_PRIMARY = "#1F1B24"
+BG_SECONDARY = "#373040"
+TEXT = "#cccccc"
 
 # Variable to keep track of the index of the article in display, for
 # displaying different articles as only 10 fit on the gui at one time
@@ -18,8 +26,8 @@ headline_tally = [0]
 
 def alternative_hacker_news(links, subtext):
     """
-    Returns an organised list of dictionaries which display title,
-    link and votes to each article, if the article has more than 150 votes.
+    Returns an organised list of dictionaries which display title, link and votes
+    to each article, if the article has at least MIN_SCORE votes.
     """
 
     hn = []
@@ -36,8 +44,8 @@ def alternative_hacker_news(links, subtext):
         # does not have a vote category
         if len(vote):
             points = int(vote[0].getText().replace(" points", ""))
-            # Change 150 to a lower number if you want to see more articles
-            if points > 150:
+
+            if points >= MIN_SCORE:
                 hn.append({"title": title, "link": href, "score": points})
 
     return hn
@@ -224,7 +232,7 @@ default_window = tk.Canvas(root, height=900, width=800)
 default_window.pack()
 
 # Background
-bg = tk.Label(root, bg="black", bd=15)
+bg = tk.Label(root, bg=BG_PRIMARY, bd=15)
 bg.place(relwidth=1, relheight=1)
 
 # Set icon and title for window
@@ -240,23 +248,25 @@ root.title("Hacker News Webscraper")
 title_frame = tk.Frame(root)
 title_frame.place(relx=0.2, rely=0.01, relwidth=0.6, relheight=0.1)
 
-title_background = tk.Label(title_frame, bg="gray")
+title_background = tk.Label(title_frame, bg=BG_SECONDARY)
 title_background.place(relwidth=1, relheight=1)
 
 title_label = tk.Label(
     title_frame,
-    bg="gray",
+    bg=BG_SECONDARY,
     text="Hacker News Parser Display",
     font=("Helvetica", 18, "bold"),
+    fg=TEXT,
 )
 title_label.place(relx=0.025, rely=0.025, relwidth=0.95, relheight=0.7)
 
 hacker_news_link = tk.Label(
     title_frame,
-    bg="gray",
+    bg=BG_SECONDARY,
     text="Click here to go to the original Hacker News website (source)",
     font=("Helvetica", 10, "underline"),
     cursor=TITLE_CURSOR,
+    fg=TEXT,
 )
 hacker_news_link.place(relx=0.025, rely=0.75, relheight=0.25, relwidth=0.95)
 hacker_news_link.bind("<Button-1>", lambda e: open_url("https://news.ycombinator.com/"))
@@ -285,48 +295,68 @@ frame8.place(relx=0.525, rely=0.475, relwidth=0.45, relheight=0.15)
 frame9.place(relx=0.525, rely=0.65, relwidth=0.45, relheight=0.15)
 frame10.place(relx=0.525, rely=0.825, relwidth=0.45, relheight=0.15)
 # Frame backgrounds
-bg1 = tk.Label(frame1, bg="gray")
+bg1 = tk.Label(frame1, bg=BG_SECONDARY)
 bg1.place(relwidth=1, relheight=1)
-bg2 = tk.Label(frame2, bg="gray")
+bg2 = tk.Label(frame2, bg=BG_SECONDARY)
 bg2.place(relwidth=1, relheight=1)
-bg3 = tk.Label(frame3, bg="gray")
+bg3 = tk.Label(frame3, bg=BG_SECONDARY)
 bg3.place(relwidth=1, relheight=1)
-bg4 = tk.Label(frame4, bg="gray")
+bg4 = tk.Label(frame4, bg=BG_SECONDARY)
 bg4.place(relwidth=1, relheight=1)
-bg5 = tk.Label(frame5, bg="gray")
+bg5 = tk.Label(frame5, bg=BG_SECONDARY)
 bg5.place(relwidth=1, relheight=1)
-bg6 = tk.Label(frame6, bg="gray")
+bg6 = tk.Label(frame6, bg=BG_SECONDARY)
 bg6.place(relwidth=1, relheight=1)
-bg7 = tk.Label(frame7, bg="gray")
+bg7 = tk.Label(frame7, bg=BG_SECONDARY)
 bg7.place(relwidth=1, relheight=1)
-bg8 = tk.Label(frame8, bg="gray")
+bg8 = tk.Label(frame8, bg=BG_SECONDARY)
 bg8.place(relwidth=1, relheight=1)
-bg9 = tk.Label(frame9, bg="gray")
+bg9 = tk.Label(frame9, bg=BG_SECONDARY)
 bg9.place(relwidth=1, relheight=1)
-bg10 = tk.Label(frame10, bg="gray")
+bg10 = tk.Label(frame10, bg=BG_SECONDARY)
 bg10.place(relwidth=1, relheight=1)
 
 # LABELS
 # make title labels
-title_label1 = tk.Label(frame1, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label1 = tk.Label(
+    frame1, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label1.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label2 = tk.Label(frame2, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label2 = tk.Label(
+    frame2, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label2.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label3 = tk.Label(frame3, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label3 = tk.Label(
+    frame3, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label3.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label4 = tk.Label(frame4, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label4 = tk.Label(
+    frame4, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label4.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label5 = tk.Label(frame5, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label5 = tk.Label(
+    frame5, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label5.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label6 = tk.Label(frame6, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label6 = tk.Label(
+    frame6, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label6.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label7 = tk.Label(frame7, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label7 = tk.Label(
+    frame7, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label7.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label8 = tk.Label(frame8, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label8 = tk.Label(
+    frame8, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label8.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label9 = tk.Label(frame9, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label9 = tk.Label(
+    frame9, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label9.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label10 = tk.Label(frame10, bg="gray", font=TITLE_FONT, cursor=TITLE_CURSOR)
+title_label10 = tk.Label(
+    frame10, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
+)
 title_label10.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
 
 # BUTTONS
