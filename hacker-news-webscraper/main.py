@@ -212,7 +212,7 @@ def get_formatted_list(links_and_subtext):
 
 
 # Get formatted list of articles and links
-# Only executed once while the program runs, so a refesh requires the
+# Only executed once while the program runs, so a refresh requires the
 # program to be restarted
 formatted_list = get_formatted_list(links_and_subtext())
 
