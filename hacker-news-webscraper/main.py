@@ -83,111 +83,41 @@ def format_titles(sorted_list):
     return formatted_list
 
 
-def open_url(url):
-    """
-    Opens the given url with the default browser, to be activated when
-    a title is clicked.
-    """
+def bind_label_to_url(label, url):
+    """Binds a label with a function which opens a given url (in a new window)."""
 
-    webbrowser.open_new(url)
+    label.bind("<Button-1>", lambda e: webbrowser.open_new(url))
 
 
-def bind_links(count, formatted_list):
+def titles_and_links(count, formatted_list, labels):
     """
-    Binds the open_url function onto each title so that they can simply be
-    clicked to open the respective link.
+    Applies corresponding article text and binds article link to each label.
     """
 
-    title_label1.bind("<Button-1>", lambda e: open_url(formatted_list[count]["link"]))
-    title_label2.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 1]["link"])
-    )
-    title_label3.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 2]["link"])
-    )
-    title_label4.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 3]["link"])
-    )
-    title_label5.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 4]["link"])
-    )
-    title_label6.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 5]["link"])
-    )
-    title_label7.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 6]["link"])
-    )
-    title_label8.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 7]["link"])
-    )
-    title_label9.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 8]["link"])
-    )
-    title_label10.bind(
-        "<Button-1>", lambda e: open_url(formatted_list[count + 9]["link"])
-    )
+    for i, label in enumerate(labels):
+        no = count + i
+        article_no = str(no + 1)
+        article_title = formatted_list[no]["title"]
+        article_score = str(formatted_list[no]["score"])
+        article_link = formatted_list[no]["link"]
+
+        bind_label_to_url(label, article_link)
+        label["text"] = f"{article_no}. {article_title}\nScore: {article_score}"
 
 
-def set_titles(count, formatted_list):
-    """
-    Sets the title for each of the 10 labels on the gui.
-
-    Titles are set according to variable headline_tally, so that they may
-    be given in order.
-    """
-
-    title_label1[
-        "text"
-    ] = f'{str(count+1)}. {formatted_list[count]["title"]}\nScore: {str(formatted_list[count]["score"])}'
-    title_label2[
-        "text"
-    ] = f'{str(count+2)}. {formatted_list[count+1]["title"]}\nScore: {str(formatted_list[count+1]["score"])}'
-    title_label3[
-        "text"
-    ] = f'{str(count+3)}. {formatted_list[count+2]["title"]}\nScore: {str(formatted_list[count+2]["score"])}'
-    title_label4[
-        "text"
-    ] = f'{str(count+4)}. {formatted_list[count+3]["title"]}\nScore: {str(formatted_list[count+3]["score"])}'
-    title_label5[
-        "text"
-    ] = f'{str(count+5)}. {formatted_list[count+4]["title"]}\nScore: {str(formatted_list[count+4]["score"])}'
-    title_label6[
-        "text"
-    ] = f'{str(count+6)}. {formatted_list[count+5]["title"]}\nScore: {str(formatted_list[count+5]["score"])}'
-    title_label7[
-        "text"
-    ] = f'{str(count+7)}. {formatted_list[count+6]["title"]}\nScore: {str(formatted_list[count+6]["score"])}'
-    title_label8[
-        "text"
-    ] = f'{str(count+8)}. {formatted_list[count+7]["title"]}\nScore: {str(formatted_list[count+7]["score"])}'
-    title_label9[
-        "text"
-    ] = f'{str(count+9)}. {formatted_list[count+8]["title"]}\nScore: {str(formatted_list[count+8]["score"])}'
-    title_label10[
-        "text"
-    ] = f'{str(count+10)}. {formatted_list[count+9]["title"]}\nScore: {str(formatted_list[count+9]["score"])}'
-
-
-def titles_and_links(formatted_list, headline_tally):
-    """Helper function to run bind_links and set_titles functions."""
-
-    bind_links(headline_tally[0], formatted_list)
-    set_titles(headline_tally[0], formatted_list)
-
-
-def previous_button_function(formatted_list, headline_tally):
+def previous_button_function(headline_tally, formatted_list, labels):
     """Shows previous 10 articles (if possible)."""
     if headline_tally[0] >= 10:
         headline_tally[0] -= 10
-        titles_and_links(formatted_list, headline_tally)
+        titles_and_links(headline_tally[0], formatted_list, labels)
 
 
-def next_button_function(formatted_list, headline_tally):
+def next_button_function(formatted_list, headline_tally, labels):
     """Shows next 10 articles (if possible)."""
 
     if len(formatted_list) >= (headline_tally[0] + 20):
         headline_tally[0] += 10
-        titles_and_links(formatted_list, headline_tally)
+        titles_and_links(headline_tally[0], formatted_list, labels)
 
 
 def links_and_subtext():
@@ -274,95 +204,70 @@ hacker_news_link = tk.Label(
     fg=TEXT,
 )
 hacker_news_link.place(relx=0.025, rely=0.75, relheight=0.25, relwidth=0.95)
-hacker_news_link.bind("<Button-1>", lambda e: open_url("https://news.ycombinator.com/"))
+hacker_news_link.bind(
+    "<Button-1>", lambda e: webbrowser.open_new("https://news.ycombinator.com/")
+)
 
-# FRAMES
-# Make frames
-frame1 = tk.Frame(root)
-frame2 = tk.Frame(root)
-frame3 = tk.Frame(root)
-frame4 = tk.Frame(root)
-frame5 = tk.Frame(root)
-frame6 = tk.Frame(root)
-frame7 = tk.Frame(root)
-frame8 = tk.Frame(root)
-frame9 = tk.Frame(root)
-frame10 = tk.Frame(root)
-# Place the frames
-frame1.place(relx=0.025, rely=0.125, relwidth=0.45, relheight=0.15)
-frame2.place(relx=0.025, rely=0.3, relwidth=0.45, relheight=0.15)
-frame3.place(relx=0.025, rely=0.475, relwidth=0.45, relheight=0.15)
-frame4.place(relx=0.025, rely=0.65, relwidth=0.45, relheight=0.15)
-frame5.place(relx=0.025, rely=0.825, relwidth=0.45, relheight=0.15)
-frame6.place(relx=0.525, rely=0.125, relwidth=0.45, relheight=0.15)
-frame7.place(relx=0.525, rely=0.3, relwidth=0.45, relheight=0.15)
-frame8.place(relx=0.525, rely=0.475, relwidth=0.45, relheight=0.15)
-frame9.place(relx=0.525, rely=0.65, relwidth=0.45, relheight=0.15)
-frame10.place(relx=0.525, rely=0.825, relwidth=0.45, relheight=0.15)
-# Frame backgrounds
-bg1 = tk.Label(frame1, bg=BG_SECONDARY)
-bg1.place(relwidth=1, relheight=1)
-bg2 = tk.Label(frame2, bg=BG_SECONDARY)
-bg2.place(relwidth=1, relheight=1)
-bg3 = tk.Label(frame3, bg=BG_SECONDARY)
-bg3.place(relwidth=1, relheight=1)
-bg4 = tk.Label(frame4, bg=BG_SECONDARY)
-bg4.place(relwidth=1, relheight=1)
-bg5 = tk.Label(frame5, bg=BG_SECONDARY)
-bg5.place(relwidth=1, relheight=1)
-bg6 = tk.Label(frame6, bg=BG_SECONDARY)
-bg6.place(relwidth=1, relheight=1)
-bg7 = tk.Label(frame7, bg=BG_SECONDARY)
-bg7.place(relwidth=1, relheight=1)
-bg8 = tk.Label(frame8, bg=BG_SECONDARY)
-bg8.place(relwidth=1, relheight=1)
-bg9 = tk.Label(frame9, bg=BG_SECONDARY)
-bg9.place(relwidth=1, relheight=1)
-bg10 = tk.Label(frame10, bg=BG_SECONDARY)
-bg10.place(relwidth=1, relheight=1)
+# ARTICLES
+FRAME_HEIGHT = 0.15
+FRAME_WIDTH = 0.45
+FRAME_START_X = 0.025
+FRAME_END_X = 0.5 + FRAME_START_X
+FRAME_Y_VALUES = [0.125, 0.3, 0.475, 0.65, 0.825]
+LABEL_LOCATION = 0.1
+LABEL_SIZE = 0.8
 
-# LABELS
-# make title labels
-title_label1 = tk.Label(
-    frame1, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label1.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label2 = tk.Label(
-    frame2, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label2.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label3 = tk.Label(
-    frame3, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label3.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label4 = tk.Label(
-    frame4, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label4.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label5 = tk.Label(
-    frame5, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label5.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label6 = tk.Label(
-    frame6, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label6.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label7 = tk.Label(
-    frame7, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label7.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label8 = tk.Label(
-    frame8, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label8.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label9 = tk.Label(
-    frame9, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label9.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
-title_label10 = tk.Label(
-    frame10, bg=BG_SECONDARY, font=TITLE_FONT, cursor=TITLE_CURSOR, fg=TEXT
-)
-title_label10.place(relx=0.1, rely=0.1, relwidth=0.8, relheight=0.8)
+# Make and place ui elements, saving the finished label elements into lists
+# since the text on them needs to be changed
+labels = []
+for i in range(5):
+    # Frames
+    left_column_frame = tk.Frame(root)
+    right_column_frame = tk.Frame(root)
+
+    left_column_frame.place(
+        relx=FRAME_START_X,
+        rely=FRAME_Y_VALUES[i],
+        relwidth=FRAME_WIDTH,
+        relheight=FRAME_HEIGHT,
+    )
+    right_column_frame.place(
+        relx=FRAME_END_X,
+        rely=FRAME_Y_VALUES[i],
+        relwidth=FRAME_WIDTH,
+        relheight=FRAME_HEIGHT,
+    )
+
+    # Set frame backgrounds, currently no need to save these as they do not need
+    # to be changed
+    tk.Label(left_column_frame, bg=BG_SECONDARY).place(relwidth=1, relheight=1)
+    tk.Label(right_column_frame, bg=BG_SECONDARY).place(relwidth=1, relheight=1)
+
+    # Create text labels
+    left_frame_label = tk.Label(
+        left_column_frame,
+        bg=BG_SECONDARY,
+        font=TITLE_FONT,
+        cursor=TITLE_CURSOR,
+        fg=TEXT,
+    )
+    right_frame_label = tk.Label(
+        right_column_frame,
+        bg=BG_SECONDARY,
+        font=TITLE_FONT,
+        cursor=TITLE_CURSOR,
+        fg=TEXT,
+    )
+
+    # Place text labels, and add them to the labels list
+    for label in (left_frame_label, right_frame_label):
+        label.place(
+            relx=LABEL_LOCATION,
+            rely=LABEL_LOCATION,
+            relwidth=LABEL_SIZE,
+            relheight=LABEL_SIZE,
+        )
+        labels.append(label)
 
 # BUTTONS
 # Make 'next' and 'previous' buttons
@@ -378,7 +283,7 @@ style.map("TButton", background=[("active", BG_BUTTON_HOVER)])
 next_button = ttk.Button(
     root,
     text="Next",
-    command=lambda: next_button_function(formatted_list, headline_tally),
+    command=lambda: next_button_function(formatted_list, headline_tally, labels),
     cursor=TITLE_CURSOR,
 )
 next_button.place(relx=0.875, rely=0.06, relwidth=0.1, relheight=0.05)
@@ -386,12 +291,12 @@ next_button.place(relx=0.875, rely=0.06, relwidth=0.1, relheight=0.05)
 previous_button = ttk.Button(
     root,
     text="Previous",
-    command=lambda: previous_button_function(formatted_list, headline_tally),
+    command=lambda: previous_button_function(headline_tally, formatted_list, labels),
     cursor=TITLE_CURSOR,
 )
 previous_button.place(relx=0.025, rely=0.06, relwidth=0.1, relheight=0.05)
 
 # Displays first 10 articles straight away
-titles_and_links(formatted_list, headline_tally)
+titles_and_links(headline_tally[0], formatted_list, labels)
 
 root.mainloop()
