@@ -7,6 +7,10 @@ BEST_STORIES_URL = f"{BASE_URL}best"
 SCORE_SELECTOR = ".score"
 TITLES_SELECTOR = ".titlelink"
 
+# STYLLING
+RESET = "\033[0m"
+BOLD = "\033[1m"
+
 
 def get_soup(link):
     """Gets soup from a given website."""
@@ -57,9 +61,9 @@ def _print_articles(stories: dict):
 
     for i, story in enumerate(reversed(stories)):
         print(
-            f"\n\n{30 - i}.{story.get('headline')}"
-            f"\nScore: {story.get('score')}"
-            f"\nLink: {story.get('link')}"
+            f"\n\n{BOLD}{30 - i}.{story.get('headline')}"
+            f"\nScore:{RESET} {story.get('score')}"
+            f"\n{BOLD}Link:{RESET} {story.get('link')}"
         )
 
 
