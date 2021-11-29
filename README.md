@@ -1,6 +1,6 @@
 # daily-hn
 
-A quick command line tool for displaying the current best stories from news.ycombinator.com (Hacker News).
+A quick command line tool for displaying the current best stories from [news.ycombinator.com](news.ycombinator.com) (Hacker News).
 
 ## Installation
 
