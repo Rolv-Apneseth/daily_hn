@@ -1,4 +1,4 @@
-# daily-hacker-news
+# daily-hn
 
 A quick command line tool for displaying the current best stories from news.ycombinator.com (Hacker News).
 
