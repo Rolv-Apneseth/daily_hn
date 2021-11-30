@@ -37,7 +37,7 @@ def fix_item_link(href):
     website itself, as they just point to specific pages on the site.
     """
 
-    return f"{BASE_URL}href"
+    return f"{BASE_URL}{href}"
 
 
 def get_stories(soup):
@@ -49,7 +49,9 @@ def get_stories(soup):
     return [
         {
             "headline": title.get_text(),
-            "link": title["href"],
+            "link": title["href"]
+            if title["href"].startswith("http")
+            else fix_item_link((title["href"])),
             "score": score.getText().replace(" points", ""),
         }
         for title, score in zip(titles, scores)
