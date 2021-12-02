@@ -106,11 +106,11 @@ def _refresh_stories_pad(stories_pad, pad_starting_row: int, MAX_LINES: int):
     )
 
 
-def _open_url(url: str, browser: str):
+def _open_url(url: str):
     webbrowser.open(url)
 
 
-def _draw_ui(stdscr, browser: str, stories: list[dict]):
+def _draw_ui(stdscr, stories: list[dict]):
 
     MAX_TITLE_LENGTH = curses.COLS - NUMBER_SPACING - BORDER_WIDTH * 2
     MAX_LINES = curses.LINES - BORDER_WIDTH
@@ -149,7 +149,7 @@ def _draw_ui(stdscr, browser: str, stories: list[dict]):
             story_index = POSSIBLE_STORY_SHORTCUTS.find(keypress)
             matching_story_link = stories[story_index]["link"]
 
-            _open_url(matching_story_link, browser)
+            _open_url(matching_story_link)
 
             # Apply visual change to shortcut keys next to opened story
             _draw_shortcut_key(stories_pad, COLOURS["fg_green"], story_index, keypress)
@@ -157,7 +157,7 @@ def _draw_ui(stdscr, browser: str, stories: list[dict]):
         _refresh_stories_pad(stories_pad, pad_starting_row, MAX_LINES)
 
 
-def init_ui(browser):
+def init_ui():
     stories = get_stories()
 
-    curses.wrapper(_draw_ui, browser, stories)
+    curses.wrapper(_draw_ui, stories)

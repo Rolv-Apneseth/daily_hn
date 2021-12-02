@@ -22,28 +22,15 @@ parser.add_argument(
     ),
 )
 
-parser.add_argument(
-    "-b",
-    "--browser",
-    type=str,
-    default="firefox",
-    help=(
-        "Browser to be used to open the story URLs (should be a command, default is"
-        " firefox)."
-    ),
-)
-
 args = parser.parse_args()
 
 
-# FUNCTIONALITY -------------------------------------------------------------------------
+# MAIN ----------------------------------------------------------------------------------
 def main():
-    BROWSER = args.browser
-
     if args.print:
         print_articles()
     else:
-        init_ui(BROWSER)
+        init_ui()
 
 
 if __name__ == "__main__":
