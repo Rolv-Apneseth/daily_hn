@@ -34,7 +34,7 @@ def _draw_title(stdscr, colours):
         1,
         2,
         "Daily Dose of HN",
-        curses.A_UNDERLINE | curses.A_BOLD | colours["fg_magenta"],
+        curses.A_UNDERLINE | curses.A_BOLD | colours["fg_green"],
     )
 
 
@@ -63,14 +63,20 @@ def _format_headline(headline: str, max_length: int):
     )
 
 
-def _add_stories_to_pad(stories_pad, stories: list[dict], COLOURS, MAX_TITLE_LENGTH):
+def _draw_shortcut_key(stories_pad, colour: int, story_index: int, shortcut_key: str):
+    stories_pad.addstr(
+        story_index * STORY_ROWS,
+        0,
+        f"({shortcut_key})",
+        colour | curses.A_BOLD,
+    )
+
+
+def _add_stories_to_pad(stories_pad, stories: list[dict], colours, MAX_TITLE_LENGTH):
     for i, story in enumerate(stories):
         # labelling (shortcuts)
-        stories_pad.addstr(
-            i * STORY_ROWS,
-            0,
-            f"({POSSIBLE_STORY_SHORTCUTS[i]})",
-            COLOURS["fg_magenta"] | curses.A_BOLD,
+        _draw_shortcut_key(
+            stories_pad, colours["fg_magenta"], i, POSSIBLE_STORY_SHORTCUTS[i]
         )
         # headline
         stories_pad.addstr(
@@ -84,7 +90,7 @@ def _add_stories_to_pad(stories_pad, stories: list[dict], COLOURS, MAX_TITLE_LEN
             i * STORY_ROWS + 1,
             NUMBER_SPACING,
             f"{story['score']}",
-            COLOURS["fg_yellow"] | curses.A_BOLD,
+            colours["fg_yellow"] | curses.A_BOLD,
         )
 
 
@@ -136,16 +142,19 @@ def _draw_ui(stdscr, browser: str, stories: list[dict]):
         # NAVIGATION
         elif keypress == "j" and pad_starting_row <= MAX_SCROLL:
             pad_starting_row += 1
-            _refresh_stories_pad(stories_pad, pad_starting_row, MAX_LINES)
         elif keypress == "k" and pad_starting_row > 0:
             pad_starting_row -= 1
-            _refresh_stories_pad(stories_pad, pad_starting_row, MAX_LINES)
         # OPEN URLS
         elif keypress in POSSIBLE_STORY_SHORTCUTS:
             story_index = POSSIBLE_STORY_SHORTCUTS.find(keypress)
             matching_story_link = stories[story_index]["link"]
 
             _open_url(matching_story_link, browser)
+
+            # Apply visual change to shortcut keys next to opened story
+            _draw_shortcut_key(stories_pad, COLOURS["fg_green"], story_index, keypress)
+
+        _refresh_stories_pad(stories_pad, pad_starting_row, MAX_LINES)
 
 
 def init_ui(browser):
