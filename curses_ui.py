@@ -2,7 +2,7 @@ import curses
 import webbrowser
 from stories import get_stories
 
-# 'j' and 'k' used for navigation, 'q' used for quitting
+# 'jk{}' used for navigation, 'q' used for quitting
 POSSIBLE_STORY_SHORTCUTS = 'abcdefhilmnoprstuvwxyz!"$%^&*.'
 # Base measurements
 STORIES_STARTING_ROW = 3
@@ -116,7 +116,8 @@ def _draw_ui(stdscr, stories: list[dict]):
     MAX_LINES = curses.LINES - BORDER_WIDTH
     STORIES_PAD_HEIGHT = len(stories) * STORY_ROWS
     STORIES_PAD_WIDTH = MAX_TITLE_LENGTH + NUMBER_SPACING
-    MAX_SCROLL = STORIES_PAD_HEIGHT - MAX_LINES
+    MAX_SCROLL = STORIES_PAD_HEIGHT - MAX_LINES + 2
+    SCROLL_AMOUNT_LARGE = MAX_LINES - STORY_ROWS
     pad_starting_row = 0  # Used for scrolling the stories pad
 
     # BASE SETUP
@@ -139,11 +140,23 @@ def _draw_ui(stdscr, stories: list[dict]):
         # QUIT
         if keypress == "q":
             break
+
         # NAVIGATION
-        elif keypress == "j" and pad_starting_row <= MAX_SCROLL:
+        elif keypress == "j" and pad_starting_row < MAX_SCROLL:
             pad_starting_row += 1
         elif keypress == "k" and pad_starting_row > 0:
             pad_starting_row -= 1
+        elif keypress == "{":
+            if pad_starting_row > SCROLL_AMOUNT_LARGE:
+                pad_starting_row -= SCROLL_AMOUNT_LARGE
+            else:
+                pad_starting_row = 0
+        elif keypress == "}":
+            if pad_starting_row < MAX_SCROLL - SCROLL_AMOUNT_LARGE:
+                pad_starting_row += SCROLL_AMOUNT_LARGE
+            else:
+                pad_starting_row = MAX_SCROLL
+
         # OPEN URLS
         elif keypress in POSSIBLE_STORY_SHORTCUTS:
             story_index = POSSIBLE_STORY_SHORTCUTS.find(keypress)
