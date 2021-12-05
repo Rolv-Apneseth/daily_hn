@@ -10,9 +10,13 @@ STORIES_STARTING_COL = 2
 BORDER_WIDTH = 2
 STORY_ROWS = 3
 NUMBER_SPACING = 4
+# Other
+PROGRAM_TITLE = "Daily Dose of HN"
 
 
 def _get_colours():
+    """Sets up curses colour pairs for easy use."""
+
     colours = dict(
         fg_blue=(curses.COLOR_BLUE, -1),
         fg_red=(curses.COLOR_RED, -1),
@@ -30,15 +34,19 @@ def _get_colours():
 
 
 def _draw_title(stdscr, colours):
+    """Draws the title for the program."""
+
     stdscr.addstr(
         1,
         2,
-        "Daily Dose of HN",
+        PROGRAM_TITLE,
         curses.A_UNDERLINE | curses.A_BOLD | colours["fg_green"],
     )
 
 
 def _draw_border(stdscr, colours):
+    """Draws a basic border for the program."""
+
     BORDER_DESIGN = curses.A_BOLD | colours["fg_magenta"]
     stdscr.attron(BORDER_DESIGN)
     stdscr.box()
@@ -46,16 +54,22 @@ def _draw_border(stdscr, colours):
 
 
 def _base_curses_setup(curses):
+    """Sets some basic curses configuration options, such as using default colours."""
+
     curses.use_default_colors()
     curses.curs_set(0)
 
 
 def _base_ui_setup(stdscr, colours):
+    """Base ui setup, draws the title of the program and a basic border."""
+
     _draw_title(stdscr, colours)
     _draw_border(stdscr, colours)
 
 
 def _format_headline(headline: str, max_length: int):
+    """Cuts/formats a headline to fit in 1 row of the stories pad."""
+
     return (
         f"{headline[:max_length - 3].strip()}..."
         if len(headline) > max_length
@@ -64,6 +78,8 @@ def _format_headline(headline: str, max_length: int):
 
 
 def _draw_shortcut_key(stories_pad, colour: int, story_index: int, shortcut_key: str):
+    """Draws a given shortcut key to the stories pad based on the given story index."""
+
     stories_pad.addstr(
         story_index * STORY_ROWS,
         0,
@@ -73,6 +89,8 @@ def _draw_shortcut_key(stories_pad, colour: int, story_index: int, shortcut_key:
 
 
 def _add_stories_to_pad(stories_pad, stories: list[dict], colours, MAX_TITLE_LENGTH):
+    """Draw all the given stories to the stories pad."""
+
     for i, story in enumerate(stories):
         # labelling (shortcuts)
         _draw_shortcut_key(
@@ -96,6 +114,7 @@ def _add_stories_to_pad(stories_pad, stories: list[dict], colours, MAX_TITLE_LEN
 
 def _refresh_stories_pad(stories_pad, pad_starting_row: int, MAX_LINES: int):
     """Convenience function for refreshing story pad."""
+
     stories_pad.refresh(
         pad_starting_row,
         0,
@@ -107,10 +126,13 @@ def _refresh_stories_pad(stories_pad, pad_starting_row: int, MAX_LINES: int):
 
 
 def _open_url(url: str):
-    webbrowser.open(url)
+    """Opens the given url in a new browser window."""
+
+    webbrowser.open(url, new=1)
 
 
 def _draw_ui(stdscr, stories: list[dict]):
+    """Main function for drawing the UI for the program."""
 
     MAX_TITLE_LENGTH = curses.COLS - NUMBER_SPACING - BORDER_WIDTH * 2
     MAX_LINES = curses.LINES - BORDER_WIDTH
@@ -171,6 +193,8 @@ def _draw_ui(stdscr, stories: list[dict]):
 
 
 def init_ui():
+    """Initialise the curses UI."""
+
     stories = get_stories()
 
     curses.wrapper(_draw_ui, stories)
