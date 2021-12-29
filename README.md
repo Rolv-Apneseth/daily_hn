@@ -14,6 +14,8 @@ Note that for any of the below commands, if you are running Windows, replace `py
 
 ## Usage
 
-To launch the script, run the command `python3 main.py`
+To launch the program, navigate to this project's directory and run the command `python3 main.py`, and add the `-p` flag if you want use the program without the curses UI.
+
+With the curses UI, you can open up stories (uses the default browser) by pressing the shortcut key to the left of that story. Navigate up and down using either `j` and `k` for fine movements or `{` and `}` for bigger jumps. To quit, press `q`.
 
 The original Hacker News website can be found [here](https://news.ycombinator.com/) or check out the best stories page this program parses [here](https://news.ycombinator.com/best)

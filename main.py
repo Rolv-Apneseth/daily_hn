@@ -1,79 +1,36 @@
-from bs4 import BeautifulSoup
-import requests
+#!/usr/bin/env python3
+from argparse import ArgumentParser
+from curses_ui import init_ui
+from stories import print_articles
 
 
-BASE_URL = "https://news.ycombinator.com/"
-BEST_STORIES_URL = f"{BASE_URL}best"
-SCORE_SELECTOR = ".score"
-TITLES_SELECTOR = ".titlelink"
+# ARGUMENTS -----------------------------------------------------------------------------
+parser = ArgumentParser(
+    description=(
+        "A CLI program written in Python with the curses library, used for keeping up"
+        " with the current best stories from news.ycombinator.com (Hacker News)."
+    ),
+)
 
-# STYLLING
-RESET = "\033[0m"
-BOLD = "\033[1m"
+parser.add_argument(
+    "-p",
+    "--print",
+    action="store_true",
+    help=(
+        "Simply outputs the formatted stories to stdout, instead of using the"
+        "fancy curses interface."
+    ),
+)
 
-
-def get_soup(link):
-    """Gets soup from a given website."""
-
-    res = requests.get(link)
-    return BeautifulSoup(res.text, "html.parser")
-
-
-def get_titles(soup):
-    """Gets story title elements from the given hacker news soup."""
-
-    return soup.select(TITLES_SELECTOR)
+args = parser.parse_args()
 
 
-def get_scores(soup):
-    """Gets subtext elements from the given hacker news soup."""
-
-    return soup.select(SCORE_SELECTOR)
-
-
-def fix_item_link(href):
-    """
-    Fixes links which point to specific items in the hacker news
-    website itself, as they just point to specific pages on the site.
-    """
-
-    return f"{BASE_URL}{href}"
-
-
-def get_stories(soup):
-    """Returns a list of dictionaries representing stories."""
-
-    titles = get_titles(soup)
-    scores = get_scores(soup)
-
-    return [
-        {
-            "headline": title.get_text(),
-            "link": title["href"]
-            if title["href"].startswith("http")
-            else fix_item_link((title["href"])),
-            "score": score.getText().replace(" points", ""),
-        }
-        for title, score in zip(titles, scores)
-    ]
-
-
-def _print_articles(stories: dict):
-    """Prints the reversed list of dictionaries neatly to the console"""
-
-    for i, story in enumerate(reversed(stories)):
-        print(
-            f"\n\n{BOLD}{30 - i}.{story.get('headline')}"
-            f"\nScore:{RESET} {story.get('score')}"
-            f"\n{BOLD}Link:{RESET} {story.get('link')}"
-        )
-
-
+# MAIN ----------------------------------------------------------------------------------
 def main():
-    soup = get_soup(BEST_STORIES_URL)
-    stories = get_stories(soup)
-
-    _print_articles(stories)
+    if args.print:
+        print_articles()
+    else:
+        init_ui()
 
 
 if __name__ == "__main__":
