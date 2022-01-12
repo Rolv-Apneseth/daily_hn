@@ -1,5 +1,7 @@
 # daily-hn
 
+![Demo aPNG](https://github.com/Rolv-Apneseth/Rolv-Apneseth.github.io/blob/4f0024e25168a57757d4631a6346275cb3f9cee7/assets/images/animated_images/daily-hn.png)
+
 A quick command line tool for displaying the current best stories from [news.ycombinator.com](news.ycombinator.com) (Hacker News).
 
 ## Installation
