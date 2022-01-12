@@ -67,4 +67,4 @@ The original Hacker News website can be found [here](https://news.ycombinator.co
 
 ## License
 
-[MIT](https://github.com/Rolv-Apneseth/ps-typer/blob/master/LICENSE)
+[MIT](https://github.com/Rolv-Apneseth/daily-hn/blob/2d40839e6e625c55075430bde5fef337a08e89ba/LICENSE)
