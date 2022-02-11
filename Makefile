@@ -5,8 +5,8 @@ all:
 
 install:
 	@mkdir -p $(DESTDIR)$(PREFIX)/bin
-	@cp -p daily-hn.py $(DESTDIR)$(PREFIX)/bin/daily-hn
-	@chmod 755 $(DESTDIR)$(PREFIX)/bin/daily-hn
+	@cp -p daily_hn.py $(DESTDIR)$(PREFIX)/bin/daily_hn
+	@chmod 755 $(DESTDIR)$(PREFIX)/bin/daily_hn
 
 uninstall:
-	@rm -rf $(DESTDIR)$(PREFIX)/bin/daily-hn
+	@rm -rf $(DESTDIR)$(PREFIX)/bin/daily_hn

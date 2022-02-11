@@ -1,27 +1,28 @@
+"""
+A CLI program written in Python with the curses library, used for keeping up with
+the current top stories from news.ycombinator.com (Hacker News).
+"""
+
 #!/usr/bin/env python3
-from argparse import ArgumentParser
-from bs4 import BeautifulSoup
-import requests
+
 import curses
 import webbrowser
+from argparse import ArgumentParser
+
+import requests
+from bs4 import BeautifulSoup
 
 
 # ARGUMENTS -----------------------------------------------------------------------------
 parser = ArgumentParser(
-    description=(
-        "A CLI program written in Python with the curses library, used for keeping up"
-        " with the current best stories from news.ycombinator.com (Hacker News)."
-    ),
+    description=(__doc__),
 )
 
 parser.add_argument(
     "-p",
     "--print",
     action="store_true",
-    help=(
-        "Simply outputs the formatted stories to stdout, instead of using the"
-        "fancy curses interface."
-    ),
+    help=("prints the stories to the terminal instead of using the ncurses gui"),
 )
 
 args = parser.parse_args()
@@ -29,10 +30,12 @@ args = parser.parse_args()
 
 # STORIES -------------------------------------------------------------------------------
 class Stories:
-    BASE_URL: str = "https://news.ycombinator.com/"
-    BEST_STORIES_URL: str = f"{BASE_URL}best"
-    SCORE_SELECTOR: str = ".score"
-    TITLES_SELECTOR: str = ".titlelink"
+    """Handles the fetching and formatting of stories."""
+
+    base_url: str = "https://news.ycombinator.com/"
+    best_stories_url: str = f"{base_url}best"
+    score_selector: str = ".score"
+    titles_selector: str = ".titlelink"
 
     @classmethod
     def _get_soup(cls, link: str):
@@ -45,13 +48,13 @@ class Stories:
     def _get_titles(cls, soup: BeautifulSoup):
         """Gets story title elements from the given hacker news soup."""
 
-        return soup.select(cls.TITLES_SELECTOR)
+        return soup.select(cls.titles_selector)
 
     @classmethod
     def _get_scores(cls, soup: BeautifulSoup):
         """Gets subtext elements from the given hacker news soup."""
 
-        return soup.select(cls.SCORE_SELECTOR)
+        return soup.select(cls.score_selector)
 
     @classmethod
     def _fix_item_link(cls, href: str):
@@ -60,13 +63,13 @@ class Stories:
         website itself, as they just point to specific pages on the site.
         """
 
-        return f"{cls.BASE_URL}{href}"
+        return f"{cls.base_url}{href}"
 
     @classmethod
     def get_stories(cls):
         """Returns a list of dictionaries representing stories."""
 
-        soup = cls._get_soup(cls.BEST_STORIES_URL)
+        soup = cls._get_soup(cls.best_stories_url)
 
         titles = cls._get_titles(soup)
         scores = cls._get_scores(soup)
@@ -98,16 +101,18 @@ class Stories:
 
 # CURSES UI -----------------------------------------------------------------------------
 class UI:
+    """Handles the drawing and management of the ncurses UI."""
+
     # 'jk{}' used for navigation, 'q' used for quitting
-    POSSIBLE_STORY_SHORTCUTS: str = 'abcdefhilmnoprstuvwxyz!"$%^&*.'
+    story_shortcuts: str = 'abcdefhilmnoprstuvwxyz!"$%^&*.'
     # Base measurements
-    STORIES_STARTING_ROW: int = 3
-    STORIES_STARTING_COL: int = 2
-    BORDER_WIDTH: int = 2
-    STORY_ROWS: int = 3
-    NUMBER_SPACING: int = 4
+    stories_starting_row: int = 3
+    stories_starting_col: int = 2
+    border_width: int = 2
+    story_rows: int = 3
+    number_spacing: int = 4
     # Other
-    PROGRAM_TITLE: str = "Daily Dose of HN"
+    program_title: str = "Daily Dose of HN"
 
     @staticmethod
     def _base_curses_setup():
@@ -154,7 +159,7 @@ class UI:
         stdscr.addstr(
             1,
             2,
-            cls.PROGRAM_TITLE,
+            cls.program_title,
             curses.A_UNDERLINE | curses.A_BOLD | colours["fg_green"],
         )
 
@@ -183,7 +188,7 @@ class UI:
         """
 
         stories_pad.addstr(
-            story_index * cls.STORY_ROWS,
+            story_index * cls.story_rows,
             0,
             f"({shortcut_key})",
             colour | curses.A_BOLD,
@@ -191,26 +196,26 @@ class UI:
 
     @classmethod
     def _add_stories_to_pad(
-        cls, stories_pad, stories: list[dict], colours: dict, MAX_TITLE_LENGTH: int
+        cls, stories_pad, stories: list[dict], colours: dict, max_title_length: int
     ):
         """Draw all the given stories to the stories pad."""
 
         for i, story in enumerate(stories):
             # labelling (shortcuts)
             cls._draw_shortcut_key(
-                stories_pad, colours["fg_magenta"], i, cls.POSSIBLE_STORY_SHORTCUTS[i]
+                stories_pad, colours["fg_magenta"], i, cls.story_shortcuts[i]
             )
             # headline
             stories_pad.addstr(
-                i * cls.STORY_ROWS,
-                cls.NUMBER_SPACING,
-                cls._format_headline(story["headline"], MAX_TITLE_LENGTH),
+                i * cls.story_rows,
+                cls.number_spacing,
+                cls._format_headline(story["headline"], max_title_length),
                 curses.A_BOLD,
             )
             # score
             stories_pad.addstr(
-                i * cls.STORY_ROWS + 1,
-                cls.NUMBER_SPACING,
+                i * cls.story_rows + 1,
+                cls.number_spacing,
                 f"{story['score']}",
                 colours["fg_yellow"] | curses.A_BOLD,
             )
@@ -222,10 +227,10 @@ class UI:
         stories_pad.refresh(
             pad_starting_row,
             0,
-            cls.STORIES_STARTING_ROW,
-            cls.STORIES_STARTING_COL,
+            cls.stories_starting_row,
+            cls.stories_starting_col,
             MAX_LINES,
-            curses.COLS - cls.BORDER_WIDTH,
+            curses.COLS - cls.border_width,
         )
 
     @staticmethod
@@ -238,12 +243,12 @@ class UI:
     def _draw_ui(cls, stdscr, stories: list[dict]):
         """Main function for drawing the UI for the program."""
 
-        MAX_TITLE_LENGTH = curses.COLS - cls.NUMBER_SPACING - cls.BORDER_WIDTH * 2
-        MAX_LINES = curses.LINES - cls.BORDER_WIDTH
-        STORIES_PAD_HEIGHT = len(stories) * cls.STORY_ROWS
-        STORIES_PAD_WIDTH = MAX_TITLE_LENGTH + cls.NUMBER_SPACING
+        max_title_length = curses.COLS - cls.number_spacing - cls.border_width * 2
+        MAX_LINES = curses.LINES - cls.border_width
+        STORIES_PAD_HEIGHT = len(stories) * cls.story_rows
+        STORIES_PAD_WIDTH = max_title_length + cls.number_spacing
         MAX_SCROLL = STORIES_PAD_HEIGHT - MAX_LINES + 2
-        SCROLL_AMOUNT_LARGE = MAX_LINES - cls.STORY_ROWS
+        SCROLL_AMOUNT_LARGE = MAX_LINES - cls.story_rows
 
         pad_starting_row = 0  # Used for scrolling the stories pad
 
@@ -256,7 +261,7 @@ class UI:
         # STORIES PAD SETUP
         stories_pad = curses.newpad(STORIES_PAD_HEIGHT, STORIES_PAD_WIDTH)
 
-        cls._add_stories_to_pad(stories_pad, stories, COLOURS, MAX_TITLE_LENGTH)
+        cls._add_stories_to_pad(stories_pad, stories, COLOURS, max_title_length)
         cls._refresh_stories_pad(stories_pad, pad_starting_row, MAX_LINES)
 
         # MAIN LOOP
@@ -285,8 +290,8 @@ class UI:
                     pad_starting_row = MAX_SCROLL
 
             # OPEN URLS
-            elif keypress in cls.POSSIBLE_STORY_SHORTCUTS:
-                story_index = cls.POSSIBLE_STORY_SHORTCUTS.find(keypress)
+            elif keypress in cls.story_shortcuts:
+                story_index = cls.story_shortcuts.find(keypress)
                 matching_story_link = stories[story_index]["link"]
 
                 cls._open_url(matching_story_link)
