@@ -59,7 +59,7 @@ pip install beautifulsoup4 requests windows-curses
 To launch the program, navigate to the project directory and run:
 
 ```bash
-python daily-hn.py
+python daily_hn.py
 ```
 
 ## Usage
