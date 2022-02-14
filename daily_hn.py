@@ -10,7 +10,7 @@ import webbrowser
 from argparse import ArgumentParser
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 
 # ARGUMENTS -----------------------------------------------------------------------------
@@ -66,6 +66,12 @@ class Stories:
         return f"{cls.base_url}{href}"
 
     @classmethod
+    def _get_points(cls, score: Tag):
+        """Returns an integer representing the points extracted from a given Tag."""
+
+        return int(score.getText().split()[0])
+
+    @classmethod
     def get_stories(cls):
         """Returns a list of dictionaries representing stories."""
 
@@ -80,16 +86,17 @@ class Stories:
                 "link": title["href"]
                 if title["href"].startswith("http")
                 else cls._fix_item_link((title["href"])),
-                "score": score.getText().replace(" points", ""),
+                "score": cls._get_points(score),
             }
             for title, score in zip(titles, scores)
         ]
 
     @classmethod
-    def print_articles(cls):
+    def print_articles(cls, stories: list[dict] = None):
         """Simple print of articles to the screen."""
 
-        stories = cls.get_stories()
+        if stories is None:
+            stories = cls.get_stories()
 
         for i, story in enumerate(reversed(stories)):
             print(
