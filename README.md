@@ -9,7 +9,7 @@
 
 ## Description
 
-A command line tool for displaying and opening links to the current best stories from [news.ycombinator.com](news.ycombinator.com) (Hacker News).
+A command line tool for displaying and opening links to the current best stories from [news.ycombinator.com](https://news.ycombinator.com) (Hacker News).
 
 You can find the best stories page this program parses [here](https://news.ycombinator.com/best)!
 
