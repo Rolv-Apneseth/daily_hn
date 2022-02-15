@@ -1,9 +1,13 @@
-"""
-A CLI program written in Python with the curses library, used for keeping up with
-the current top stories from news.ycombinator.com (Hacker News).
-"""
-
 #!/usr/bin/env python3
+# ---------------------------------------------------------------------------------------
+# Author: Rolv-Apneseth <rolv.apneseth@gmail.com>
+# License: MIT
+# ---------------------------------------------------------------------------------------
+
+"""
+A command line tool for displaying and opening links to the current best stories from
+news.ycombinator.com (Hacker News)
+"""
 
 import curses
 import webbrowser
@@ -14,9 +18,7 @@ from bs4 import BeautifulSoup, Tag
 
 
 # ARGUMENTS -----------------------------------------------------------------------------
-parser = ArgumentParser(
-    description=(__doc__),
-)
+parser = ArgumentParser(description=__doc__)
 
 parser.add_argument(
     "-p",
