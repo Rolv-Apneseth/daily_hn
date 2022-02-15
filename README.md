@@ -4,6 +4,8 @@
 ![Linux](https://img.shields.io/badge/-Linux-grey?logo=linux)
 ![OSX](https://img.shields.io/badge/-OSX-black?logo=apple)
 ![Python](https://img.shields.io/badge/Python-v3.9%5E-green?logo=python)
+![daily_hn_version](https://img.shields.io/github/v/tag/rolv-apneseth/daily_hn?label=version)
+[![pypi_version](https://img.shields.io/pypi/v/daily_hn?label=pypi)](https://pypi.org/project/daily-hn/)
 
 ![Demo aPNG](https://github.com/Rolv-Apneseth/Rolv-Apneseth.github.io/blob/4f0024e25168a57757d4631a6346275cb3f9cee7/assets/images/animated_images/daily-hn.png)
 
