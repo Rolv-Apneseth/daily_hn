@@ -9,9 +9,9 @@
 
 ## Description
 
-A minimalistic command line tool for displaying and opening links to the current best stories from [news.ycombinator.com](news.ycombinator.com) (Hacker News).
+A command line tool for displaying and opening links to the current best stories from [news.ycombinator.com](news.ycombinator.com) (Hacker News).
 
-The original Hacker News website can be found [here](https://news.ycombinator.com/) or check out the best stories page this program parses [here](https://news.ycombinator.com/best)
+You can find the best stories page this program parses [here](https://news.ycombinator.com/best)!
 
 ## Dependencies
 
@@ -35,10 +35,10 @@ Next, install the requirements for the program.
 > In your terminal, navigate to the cloned directory and run:
 
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m pip install requests beautifulsoup4
 ```
 
-Then, to place the daily-hn script at `/usr/local/daily_hn`:
+Then, to place the `daily_hn` script at `/usr/local/daily_hn`:
 
 ```bash
 sudo make install
