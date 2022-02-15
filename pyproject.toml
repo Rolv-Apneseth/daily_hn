@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "daily-hn"
-version = "0.0.0"
+name = "daily_hn"
+version = "0.1.0"
 readme="README.md"
 description = "A command line tool for displaying and opening links to the current best stories from news.ycombinator.com (Hacker News)"
 authors = ["Rolv-Apneseth <rolv.apneseth@gmail.com>"]
-homepage = "https://github.com/Rolv-Apneseth/daily-hn/"
+homepage = "https://github.com/Rolv-Apneseth/daily_hn/"
 license = "MIT"
 
 [tool.poetry.dependencies]
