@@ -1,6 +1,6 @@
-# daily-hn
+# daily_hn
 
-![Tests](https://github.com/Rolv-Apneseth/daily-hn/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/Rolv-Apneseth/daily_hn/actions/workflows/tests.yml/badge.svg)
 ![Linux](https://img.shields.io/badge/-Linux-grey?logo=linux)
 ![OSX](https://img.shields.io/badge/-OSX-black?logo=apple)
 ![Python](https://img.shields.io/badge/Python-v3.9%5E-green?logo=python)
@@ -27,7 +27,7 @@ To download, click on 'Code' to the top right, then download as a zip file. You 
 > You can also clone the repository using:
 
 ```bash
-git clone https://github.com/Rolv-Apneseth/daily-hn.git
+git clone https://github.com/Rolv-Apneseth/daily_hn.git
 ```
 
 Next, install the requirements for the program.
@@ -70,4 +70,4 @@ To simply print out a list of stories (links being clickable depends on your ter
 
 ## License
 
-[MIT](https://github.com/Rolv-Apneseth/daily-hn/blob/2d40839e6e625c55075430bde5fef337a08e89ba/LICENSE)
+[MIT](https://github.com/Rolv-Apneseth/daily_hn/blob/2d40839e6e625c55075430bde5fef337a08e89ba/LICENSE)
