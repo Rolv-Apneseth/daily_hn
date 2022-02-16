@@ -4,8 +4,9 @@
 ![Linux](https://img.shields.io/badge/-Linux-grey?logo=linux)
 ![OSX](https://img.shields.io/badge/-OSX-black?logo=apple)
 ![Python](https://img.shields.io/badge/Python-v3.9%5E-green?logo=python)
-![daily_hn_version](https://img.shields.io/github/v/tag/rolv-apneseth/daily_hn?label=version)
-[![pypi_version](https://img.shields.io/pypi/v/daily_hn?label=pypi)](https://pypi.org/project/daily-hn/)
+![Version](https://img.shields.io/github/v/tag/rolv-apneseth/daily_hn?label=version)
+[![PyPi](https://img.shields.io/pypi/v/daily_hn?label=pypi)](https://pypi.org/project/daily-hn/)
+![Black](https://img.shields.io/badge/code%20style-black-000000.svg)
 
 ![Demo aPNG](https://github.com/Rolv-Apneseth/Rolv-Apneseth.github.io/blob/4f0024e25168a57757d4631a6346275cb3f9cee7/assets/images/animated_images/daily-hn.png)
 
@@ -13,7 +14,7 @@
 
 A command line tool for displaying and opening links to the current best stories from [news.ycombinator.com](https://news.ycombinator.com) (Hacker News).
 
-You can find the best stories page this program parses [here](https://news.ycombinator.com/best)!
+You can find the best stories page this program parses [here!](https://news.ycombinator.com/best)
 
 ## Dependencies
 
@@ -24,51 +25,51 @@ You can find the best stories page this program parses [here](https://news.ycomb
 
 ## Installation
 
-To download, click on 'Code' to the top right, then download as a zip file. You can unzip using your preferred program.
+### Pypi
 
-> You can also clone the repository using:
+> Install or update to latest version
 
 ```bash
-git clone https://github.com/Rolv-Apneseth/daily_hn.git
+python3 -m pip install daily-hn --upgrade
 ```
 
-Next, install the requirements for the program.
+> If you are on Windows, also install `windows-curses`
 
-> In your terminal, navigate to the cloned directory and run:
+```bash
+pip install windows-curses daily-hn --upgrade
+```
+
+## Manual Installation
+
+> Make sure you have `python3` and `git` installed
+
+> Install Python requirements
 
 ```bash
 python3 -m pip install requests beautifulsoup4
 ```
 
-Then, to place the `daily_hn` script at `/usr/local/daily_hn`:
+> Install
 
 ```bash
+git clone https://github.com/Rolv-Apneseth/daily_hn.git
+cd daily_hn
 sudo make install
 ```
 
-Now, to launch the program in your terminal simply run `daily_hn`
-
-### Windows
-
-Install the requirements for the program.
-
-> In your terminal, navigate to the cloned directory and run:
+> Uninstall
 
 ```bash
-pip install beautifulsoup4 requests windows-curses
-```
-
-To launch the program, navigate to the project directory and run:
-
-```bash
-python daily_hn.py
+sudo make uninstall
 ```
 
 ## Usage
 
-With the curses UI (default), you can open up stories (uses the default browser) by pressing the shortcut key to the left of that story. Navigate up and down using either `j` and `k` for fine movements or `{` and `}` for bigger jumps. To quit, press `q`.
+After installation, the program can be launched from your terminal by running `daily_hn` (on Windows, use `python -m daily_hn` unless you added the `site-packages` folder to your `Path`).
 
-To simply print out a list of stories (links being clickable depends on your terminal emulator), provide the `-p` flag
+With the `curses` UI (default), you can open up stories (uses the default browser) by pressing the shortcut key to the left of that story. Navigate up and down using either `j` and `k` for fine movements or `{` and `}` for bigger jumps. To quit, press `q`.
+
+To simply print out a list of stories (links being clickable depends on your terminal emulator), provide the `-p` flag i.e. `daily_hn -p`.
 
 ## License
 
