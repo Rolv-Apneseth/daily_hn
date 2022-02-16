@@ -1,4 +1,4 @@
-from daily_hn import Stories, UI
+from daily_hn import UI, Stories
 
 
 class TestDailyHN:

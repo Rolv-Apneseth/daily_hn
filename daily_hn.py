@@ -16,7 +16,6 @@ from argparse import ArgumentParser
 import requests
 from bs4 import BeautifulSoup, Tag
 
-
 # ARGUMENTS -----------------------------------------------------------------------------
 parser = ArgumentParser(description=__doc__)
 
