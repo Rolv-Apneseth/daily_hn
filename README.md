@@ -21,7 +21,7 @@ You can find the best stories page this program parses [here!](https://news.ycom
 - [Python](https://www.python.org/downloads/) v3.9+
 - [Beautiful Soup 4](https://pypi.org/project/beautifulsoup4/)
 - [Requests](https://pypi.org/project/requests/)
-- If you are on Windows: [Windows curses module](https://pypi.org/project/windows-curses/) (Python)
+- If you are on Windows: [windows-curses](https://pypi.org/project/windows-curses/) (Python)
 
 ## Installation
 
