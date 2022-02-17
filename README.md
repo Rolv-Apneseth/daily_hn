@@ -1,4 +1,4 @@
-# daily_hn
+# <img alt="daily_hn" src="https://github.com/Rolv-Apneseth/daily_hn/blob/1f191fe1cb9f81892794d2d0b7d0173923df7da9/assets/daily_hn.png" width="400px"/>
 
 ![Tests](https://github.com/Rolv-Apneseth/daily_hn/actions/workflows/tests.yml/badge.svg)
 ![Linux](https://img.shields.io/badge/-Linux-grey?logo=linux)
