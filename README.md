@@ -8,7 +8,8 @@
 [![PyPi](https://img.shields.io/pypi/v/daily_hn?label=pypi)](https://pypi.org/project/daily-hn/)
 ![Black](https://img.shields.io/badge/code%20style-black-000000.svg)
 
-![Demo aPNG](https://github.com/Rolv-Apneseth/Rolv-Apneseth.github.io/blob/4f0024e25168a57757d4631a6346275cb3f9cee7/assets/images/animated_images/daily-hn.png)
+![daily_hn demo](https://user-images.githubusercontent.com/69486699/161394178-a6030503-f481-481e-999b-b027ea4bba96.png)
+
 
 ## Description
 
