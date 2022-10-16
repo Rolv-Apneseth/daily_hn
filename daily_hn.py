@@ -10,6 +10,7 @@ news.ycombinator.com (Hacker News)
 """
 
 import curses
+import sys
 import webbrowser
 from argparse import ArgumentParser
 
@@ -36,7 +37,7 @@ class Stories:
     base_url: str = "https://news.ycombinator.com/"
     best_stories_url: str = f"{base_url}best"
     score_selector: str = ".score"
-    titles_selector: str = ".titlelink"
+    titles_selector: str = ".titleline a"
 
     @classmethod
     def _get_soup(cls, link: str):
@@ -81,7 +82,7 @@ class Stories:
         titles = cls._get_titles(soup)
         scores = cls._get_scores(soup)
 
-        return [
+        stories = [
             {
                 "headline": title.get_text(),
                 "link": title["href"]
@@ -91,6 +92,15 @@ class Stories:
             }
             for title, score in zip(titles, scores)
         ]
+
+        if not stories:
+            sys.exit(
+                "The list of stories is empty. Please ensure the following values are correct:"
+                f"\nSite url: {cls.best_stories_url}"
+                f"\nTitle selector: {cls.titles_selector}"
+                f"\nScore selector: {cls.score_selector}"
+            )
+        return stories
 
     @classmethod
     def print_articles(cls, stories: list[dict] = None):
