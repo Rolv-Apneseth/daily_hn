@@ -37,7 +37,7 @@ class Stories:
     base_url: str = "https://news.ycombinator.com/"
     best_stories_url: str = f"{base_url}best"
     score_selector: str = ".score"
-    titles_selector: str = ".titleline a"
+    titles_selector: str = ".titleline > a"
 
     @classmethod
     def _get_soup(cls, link: str):
